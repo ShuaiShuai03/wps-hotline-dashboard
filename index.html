@@ -94,7 +94,7 @@ select.f:focus-visible,input.f:focus-visible,.btn:focus-visible,.navitem:focus-v
 .nav .btn{background:var(--nav-2);border-color:var(--nav-line);color:var(--nav-ink)}
 .nav .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
 
-.content{padding:20px 24px 60px;max-width:1560px;width:100%}
+.content{padding:20px 24px 60px;width:100%;max-width:none;flex:1;min-width:0}
 .view[hidden]{display:none!important}
 
 /* ---------- cards ---------- */
@@ -109,6 +109,13 @@ select.f:focus-visible,input.f:focus-visible,.btn:focus-visible,.navitem:focus-v
 .row21{display:grid;grid-template-columns:1fr 1.35fr;gap:14px;margin-bottom:14px}
 .full{margin-bottom:14px}
 @media (max-width:1180px){.row2,.row3,.row12,.row21{grid-template-columns:1fr}}
+/* 超宽屏：让卡片继续横向铺开，而不是把内容拉成一条 */
+@media (min-width:1800px){
+  .content{padding-left:32px;padding-right:32px}
+  .kpis{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+  .donutgrid{grid-template-columns:repeat(auto-fit,minmax(270px,1fr))}
+  .multibars{grid-template-columns:repeat(auto-fit,minmax(380px,1fr))}
+}
 
 /* KPI */
 .kpis{display:grid;gap:12px;margin-bottom:14px;grid-template-columns:repeat(auto-fit,minmax(196px,1fr))}
@@ -130,13 +137,13 @@ select.f:focus-visible,input.f:focus-visible,.btn:focus-visible,.navitem:focus-v
 .strip .cell .v{font-size:25px;margin-top:4px;font-family:"Barlow Condensed","Noto Sans SC",sans-serif;font-weight:600}
 
 /* funnel */
-.funnel-svg{width:100%;height:auto;display:block}
+.funnel-svg{width:100%;height:auto;display:block;max-width:100%}
 .fnl-label{fill:var(--ink-2);font-size:13.5px}
 .fnl-val{fill:var(--ink);font-size:17px;font-weight:600;font-family:"Barlow Condensed",sans-serif}
 .fnl-conv{fill:var(--ink-3);font-size:12px}
 
 /* generic svg chart */
-.chart{width:100%;height:auto;display:block;overflow:visible}
+.chart{width:100%;height:auto;display:block;overflow:visible;max-width:100%}
 .axis-line{stroke:var(--line-2)}
 .gridline{stroke:var(--line);stroke-dasharray:2,4}
 .axis-text{fill:var(--ink-3);font-size:12.5px;font-family:"Noto Sans SC",sans-serif}
@@ -191,7 +198,14 @@ select.f:focus-visible,input.f:focus-visible,.btn:focus-visible,.navitem:focus-v
 .rank .fill{height:100%;border-radius:4px}
 
 /* table */
-.tblwrap{overflow:auto;border:1px solid var(--line);border-radius:12px;max-height:640px}
+.tblwrap{overflow:auto;border:1px solid var(--line);border-radius:12px;max-height:calc(100vh - 300px);min-height:280px;
+  scrollbar-width:auto;scrollbar-color:var(--line-2) var(--surface-2);scrollbar-gutter:stable both-edges}
+/* 常显滚动条：不加这段，macOS 上滚动条只有在滚动时才短暂出现，看不到也拖不到 */
+.tblwrap::-webkit-scrollbar{width:14px;height:14px}
+.tblwrap::-webkit-scrollbar-track{background:var(--surface-2);border-radius:8px}
+.tblwrap::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:8px;border:3px solid var(--surface-2)}
+.tblwrap::-webkit-scrollbar-thumb:hover{background:var(--ink-3)}
+.tblwrap::-webkit-scrollbar-corner{background:var(--surface-2)}
 table{border-collapse:separate;border-spacing:0;width:100%;font-size:13.5px}
 thead th{position:sticky;top:0;z-index:2;background:var(--surface-2);color:var(--ink-2);font-weight:600;text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);white-space:nowrap;cursor:pointer;user-select:none}
 thead th:hover{color:var(--ink)}
@@ -240,6 +254,13 @@ dialog::backdrop{background:rgba(8,12,18,.55)}
 }
 </style>
 
+<style>
+/* Chrome 里只要元素上设了 scrollbar-width / scrollbar-color，::-webkit-scrollbar 的自定义样式
+   就会被整体忽略，macOS 下退回成"滚动时才短暂出现"的浮层滚动条（实测 offsetWidth-clientWidth = 2px）。
+   这里把这两个标准属性还原成 initial，让 core.css 里的 ::-webkit-scrollbar 规则重新生效，
+   滚动条才会常显、占位（实测 14px + gutter）。 */
+.tblwrap{scrollbar-width:initial;scrollbar-color:initial}
+</style>
 <div class="app">
   <aside class="nav">
     <div class="brand">
@@ -1110,7 +1131,7 @@ var DASH = (function(){
   };
 })();
 </script>
-<script>window.__AIRSCRIPT__ = "/* ============================================================\n   热线 & 未购｜看板数据导出（AirScript · 只读）\n   放在任意一个战区管理系统的脚本编辑器里直接运行。\n   - 按【字段名】读取，字段顺序被调整不影响结果\n   - 只读源表：热线日报表 / 未购日报表，不依赖任何统计表、合并表\n   - 输出分段打印（每段 700 字），因为脚本日志面板会把超长的单行截断。\n     运行完在日志区全选复制（Cmd/Ctrl+A → Cmd/Ctrl+C），\n     整段粘进看板的「导入 AirScript 数据」即可，看板会自动拼接。\n   ============================================================ */\n\n// 表名按\"包含关键字\"匹配，通常无需改动\nvar HOTLINE_KEY = '热线日报';\nvar NOBUY_KEY   = '未购日报';\n// ZONE 留空则自动从表名推断，如\"一战区热线日报表\" -> 一战区\nvar ZONE = '';\n\nvar HOTLINE_FIELDS = ['轮次','部门','组别','员工','引流渠道','创建时间','广告费','进线量','注册',\n  '当日完播','采集总','定金','实发单量','实发金额','签收金额','线上产出','线上单量'];\nvar NOBUY_FIELDS = ['轮次','部门','组别','员工','引流渠道','客户类型','创建时间','线索成本','承接数据',\n  '首轮完播','首轮单量','首轮发货业绩','往期完播','往期单量','往期发货业绩',\n  '总成交单量','总发货业绩','总活跃客户','总待激活','流失','签收业绩'];\n\nvar CHUNK = 700;\n\nfunction findSheetByKey(key){\n  var n = Application.Sheets.Count;\n  for (var i = 1; i <= n; i++){\n    var s = Application.Sheets.Item(i);\n    if (s.Name && s.Name.indexOf(key) >= 0 && s.Name.indexOf('统计') < 0 && s.Name.indexOf('📊') < 0) return s;\n  }\n  return null;\n}\n\nfunction fieldMap(sheet){\n  var m = {};\n  sheet.GetFields().forEach(function(f){ m[f.name] = f.id; });\n  return m;\n}\n\n// 关联/人员/选项字段的单元格是 DBCellValue：{ Value:[{id,str}], display, ... }\n// 取 str（关联/人员显示名），其次 nickname/name/text，最后 display。\nfunction textOf(p){\n  if (p == null) return '';\n  if (typeof p !== 'object') return String(p);\n  return p.str || p.nickname || p.name || p.text || p.title || '';\n}\n\nfunction cellValue(sheet, row, fmap, name){\n  var fid = fmap[name];\n  if (!fid) return null;\n  try {\n    var v = sheet.RecordRange(row, fid).Value;\n    if (v == null) return null;\n    if (typeof v !== 'object') return v;\n    if (Array.isArray(v)){\n      return v.map(textOf).filter(function(x){ return x !== ''; }).join(',');\n    }\n    if (Array.isArray(v.Value)){\n      var joined = v.Value.map(textOf).filter(function(x){ return x !== ''; }).join(',');\n      return joined || (v.display || '');\n    }\n    if (v.Value !== undefined && typeof v.Value !== 'object') return v.Value;\n    return v.display || '';\n  } catch (e) { return null; }\n}\n\nfunction readRows(sheet, fields, tag, zone, cols){\n  var fmap = fieldMap(sheet);\n  var total = sheet.RecordRange().Count;\n  var out = [];\n  for (var r = 1; r <= total; r++){\n    var rec = [], hasData = false;\n    for (var c = 0; c < cols.length; c++){\n      var name = cols[c], v;\n      if (name === '类型') v = tag;\n      else if (name === '战区') v = zone;\n      else if (fields.indexOf(name) < 0) v = null;\n      else {\n        v = cellValue(sheet, r, fmap, name);\n        // 创建时间是系统自动填的，不能当作\"这一行有数据\"的依据，否则空行也会被导出\n        if (name !== '创建时间' && v !== null && v !== '' && v !== 0) hasData = true;\n      }\n      rec.push(v === undefined ? null : v);\n    }\n    if (hasData) out.push(rec);\n  }\n  return out;\n}\n\nfunction guessZone(name){\n  var m = String(name || '').match(/(.{1,4}战区)/);\n  return m ? m[1] : '';\n}\n\n// 分段打印：日志面板会截断超长单行，所以切成小段，看板端自动拼接\nfunction emit(str){\n  var total = Math.ceil(str.length / CHUNK);\n  console.log('==== 数据开始：共 ' + total + ' 段，请在日志区全选复制后粘进看板 ====');\n  for (var i = 0; i < total; i++){\n    console.log('@@' + (i + 1) + '@@' + str.substr(i * CHUNK, CHUNK) + '@@/@@');\n  }\n  console.log('==== 数据结束 ====');\n}\n\nfunction main(){\n  var hlSheet = findSheetByKey(HOTLINE_KEY);\n  var nbSheet = findSheetByKey(NOBUY_KEY);\n  var zone = ZONE || guessZone(hlSheet && hlSheet.Name) || guessZone(nbSheet && nbSheet.Name) || '本战区';\n\n  // 列式输出：所有行共用一份表头，体积比对象数组小一半以上\n  var cols = ['类型','战区'];\n  HOTLINE_FIELDS.concat(NOBUY_FIELDS).forEach(function(f){ if (cols.indexOf(f) < 0) cols.push(f); });\n\n  var rows = [], srcs = [];\n  if (hlSheet){\n    var hl = readRows(hlSheet, HOTLINE_FIELDS, '热线', zone, cols);\n    rows = rows.concat(hl); srcs.push(hlSheet.Name + '(' + hl.length + '条)');\n  } else console.log('未找到包含「' + HOTLINE_KEY + '」的数据表');\n  if (nbSheet){\n    var nb = readRows(nbSheet, NOBUY_FIELDS, '未购', zone, cols);\n    rows = rows.concat(nb); srcs.push(nbSheet.Name + '(' + nb.length + '条)');\n  } else console.log('未找到包含「' + NOBUY_KEY + '」的数据表');\n\n  var payload = {\n    meta: { zone: zone, generatedAt: new Date().toISOString(), source: srcs.join(' + ') },\n    cols: cols,\n    rows: rows\n  };\n  emit(JSON.stringify(payload));\n  console.log('共 ' + rows.length + ' 条记录');\n  return payload;\n}\n\nmain();\n";</script>
+<script>window.__AIRSCRIPT__ = "/* ============================================================\n   热线 & 未购｜看板数据导出（AirScript · 只读）\n   放在任意一个战区管理系统的脚本编辑器里直接运行。\n   - 按【字段名】读取，字段顺序被调整不影响结果\n   - 只读源表：热线日报表 / 未购日报表，不依赖任何统计表、合并表\n   - 输出分段打印（每段 700 字），因为脚本日志面板会把超长的单行截断。\n     运行完在日志区全选复制（Cmd/Ctrl+A → Cmd/Ctrl+C），\n     整段粘进看板的「导入 AirScript 数据」即可，看板会自动拼接。\n   ============================================================ */\n\n// 表名按\"包含关键字\"匹配，通常无需改动\nvar HOTLINE_KEY = '热线日报';\nvar NOBUY_KEY   = '未购日报';\n// ZONE 留空则自动从表名推断，如\"一战区热线日报表\" -> 一战区\nvar ZONE = '';\n\nvar HOTLINE_FIELDS = ['轮次','部门','组别','员工','引流渠道','创建时间','广告费','进线量','注册',\n  '当日完播','采集总','定金','实发单量','实发金额','签收金额','线上产出','线上单量'];\nvar NOBUY_FIELDS = ['轮次','部门','组别','员工','引流渠道','客户类型','创建时间','线索成本','承接数据',\n  '首轮完播','首轮单量','首轮发货业绩','往期完播','往期单量','往期发货业绩',\n  '总成交单量','总发货业绩','总活跃客户','总待激活','流失','签收业绩'];\n\nvar CHUNK = 700;\n\n// 返回所有匹配的表：单战区文档只有一张，总管理系统里每个战区各一张，全部导出\nfunction findSheetsByKey(key){\n  var n = Application.Sheets.Count, out = [];\n  for (var i = 1; i <= n; i++){\n    var s = Application.Sheets.Item(i);\n    if (s.Name && s.Name.indexOf(key) >= 0 && s.Name.indexOf('统计') < 0 && s.Name.indexOf('📊') < 0) out.push(s);\n  }\n  return out;\n}\n\nfunction fieldMap(sheet){\n  var m = {};\n  sheet.GetFields().forEach(function(f){ m[f.name] = f.id; });\n  return m;\n}\n\n// 关联/人员/选项字段的单元格是 DBCellValue：{ Value:[{id,str}], display, ... }\n// 取 str（关联/人员显示名），其次 nickname/name/text，最后 display。\nfunction textOf(p){\n  if (p == null) return '';\n  if (typeof p !== 'object') return String(p);\n  return p.str || p.nickname || p.name || p.text || p.title || '';\n}\n\nfunction cellValue(sheet, row, fmap, name){\n  var fid = fmap[name];\n  if (!fid) return null;\n  try {\n    var v = sheet.RecordRange(row, fid).Value;\n    if (v == null) return null;\n    if (typeof v !== 'object') return v;\n    if (Array.isArray(v)){\n      return v.map(textOf).filter(function(x){ return x !== ''; }).join(',');\n    }\n    if (Array.isArray(v.Value)){\n      var joined = v.Value.map(textOf).filter(function(x){ return x !== ''; }).join(',');\n      return joined || (v.display || '');\n    }\n    if (v.Value !== undefined && typeof v.Value !== 'object') return v.Value;\n    return v.display || '';\n  } catch (e) { return null; }\n}\n\nfunction readRows(sheet, fields, tag, zone, cols){\n  var fmap = fieldMap(sheet);\n  var total = sheet.RecordRange().Count;\n  var out = [];\n  for (var r = 1; r <= total; r++){\n    var rec = [], hasData = false;\n    for (var c = 0; c < cols.length; c++){\n      var name = cols[c], v;\n      if (name === '类型') v = tag;\n      else if (name === '战区') v = zone;\n      else if (fields.indexOf(name) < 0) v = null;\n      else {\n        v = cellValue(sheet, r, fmap, name);\n        // 创建时间是系统自动填的，不能当作\"这一行有数据\"的依据，否则空行也会被导出\n        if (name !== '创建时间' && v !== null && v !== '' && v !== 0) hasData = true;\n      }\n      rec.push(v === undefined ? null : v);\n    }\n    if (hasData) out.push(rec);\n  }\n  return out;\n}\n\nfunction guessZone(name){\n  var m = String(name || '').match(/(.{1,4}战区)/);\n  return m ? m[1] : '';\n}\n\n// 分段打印：日志面板会截断超长单行，所以切成小段，看板端自动拼接\nfunction emit(str){\n  var total = Math.ceil(str.length / CHUNK);\n  console.log('==== 数据开始：共 ' + total + ' 段，请在日志区全选复制后粘进看板 ====');\n  for (var i = 0; i < total; i++){\n    console.log('@@' + (i + 1) + '@@' + str.substr(i * CHUNK, CHUNK) + '@@/@@');\n  }\n  console.log('==== 数据结束 ====');\n}\n\nfunction main(){\n  var hlSheets = findSheetsByKey(HOTLINE_KEY);\n  var nbSheets = findSheetsByKey(NOBUY_KEY);\n  if (!hlSheets.length) console.log('未找到包含「' + HOTLINE_KEY + '」的数据表');\n  if (!nbSheets.length) console.log('未找到包含「' + NOBUY_KEY + '」的数据表');\n\n  // 列式输出：所有行共用一份表头，体积比对象数组小一半以上\n  var cols = ['类型','战区'];\n  HOTLINE_FIELDS.concat(NOBUY_FIELDS).forEach(function(f){ if (cols.indexOf(f) < 0) cols.push(f); });\n\n  var rows = [], srcs = [], zones = [];\n  function take(sheets, fields, tag){\n    sheets.forEach(function(sh){\n      var z = ZONE || guessZone(sh.Name) || '本战区';\n      if (zones.indexOf(z) < 0) zones.push(z);\n      var got = readRows(sh, fields, tag, z, cols);\n      rows = rows.concat(got);\n      srcs.push(sh.Name + '(' + got.length + '条)');\n    });\n  }\n  take(hlSheets, HOTLINE_FIELDS, '热线');\n  take(nbSheets, NOBUY_FIELDS, '未购');\n\n  var payload = {\n    meta: { zone: zones.join('、') || '本战区', generatedAt: new Date().toISOString(), source: srcs.join(' + ') },\n    cols: cols,\n    rows: rows\n  };\n  emit(JSON.stringify(payload));\n  console.log('共 ' + rows.length + ' 条记录');\n  return payload;\n}\n\nmain();\n";</script>
 <script>
 (function(){
   "use strict";
@@ -1254,6 +1275,31 @@ var DASH = (function(){
   function tint(list, dimKey){
     var order = D.uniqVals(state.rows, dimKey);
     return list.map(function(r){ r.color = D.colorFor(r.name, order); return r; });
+  }
+
+  /* KPI 栅格补位：.kpis 是 auto-fit minmax(...,1fr) 的流式栅格，列数由容器宽度自己决定。
+     但 hero 卡占 2 列，卡片数固定，某些宽度下最后一行只剩一两张卡、右侧留大片空白。
+     这里不写死任何像素：读回浏览器**实际算出**的列数，先在会造成孤行时把 hero 收回 1 列，
+     再把最后一行空出来的列平摊给该行卡片，让任何宽度下都铺满。 */
+  function balanceGrid(host){
+    if (!host) return;
+    var items = [].slice.call(host.children);
+    if (!items.length) return;
+    items.forEach(function(el){ el.style.gridColumn = ''; });
+    var cols = getComputedStyle(host).gridTemplateColumns.split(/\s+/)
+      .filter(function(t){ return parseFloat(t) > 0; }).length;
+    if (!(cols > 1)) return;                 // 单列（窄屏/移动端）不干预
+    var hero = host.querySelector('.hero');
+    var heroSpan = (hero && cols >= items.length + 1) ? 2 : 1;
+    if (hero) hero.style.gridColumn = 'span ' + heroSpan;
+    var cells = items.length + (heroSpan - 1);
+    var rem = cells % cols;
+    if (!rem) return;
+    var lastRow = items.slice(items.length - rem), extra = cols - rem;
+    lastRow.forEach(function(el, i){
+      var add = Math.floor(extra / lastRow.length) + (i < extra % lastRow.length ? 1 : 0);
+      if (add) el.style.gridColumn = 'span ' + ((el === hero ? heroSpan : 1) + add);
+    });
   }
 
   /* ---------------- 视图渲染 ---------------- */
@@ -1560,7 +1606,16 @@ var DASH = (function(){
     Object.keys(VIEWS).forEach(function(k){ $('view-'+k).hidden = (k!==state.view); });
     try { v.fn(rows); }
     catch(e){ console.error(e); }
+    [].forEach.call(document.querySelectorAll('#view-'+state.view+' .kpis'), balanceGrid);
   }
+  // 窗口尺寸变化时列数会变，补位要跟着重算（节流一帧即可）
+  var rzT = null;
+  window.addEventListener('resize', function(){
+    clearTimeout(rzT);
+    rzT = setTimeout(function(){
+      if (state.rows.length) [].forEach.call(document.querySelectorAll('#view-'+state.view+' .kpis'), balanceGrid);
+    }, 120);
+  });
   function setView(v){
     state.view = v;
     [].forEach.call(document.querySelectorAll('.navitem'), function(b){ b.setAttribute('aria-current', b.dataset.view===v ? 'true':'false'); });
