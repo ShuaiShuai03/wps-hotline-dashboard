@@ -32,20 +32,39 @@ function findSheetsByKey(key){
   return out;
 }
 
+// ⚠️ 本脚本要求脚本环境 AirScript 2.0（新建脚本时在 + 右侧的下拉里选）。
+// 在 1.0 环境下 GetFields() 返回的 f.name 是 Promise，会变成 "[object Promise]"，
+// 导致字段名->id 的映射整体错位、取到完全错误的列；而 1.0 的沙箱又缺少可用的
+// Promise.all/async 支持，无法在脚本内绕开。所以统一用 2.0。
 function fieldMap(sheet){
   var m = {};
-  sheet.GetFields().forEach(function(f){ m[f.name] = f.id; });
+  sheet.GetFields().forEach(function(f){ m[String(f.name)] = f.id; });
   return m;
+}
+
+// 源表缺字段时明确报出来，而不是静默返回空列
+function warnMissing(sheetName, fmap, fields){
+  var miss = fields.filter(function(n){ return !fmap[n]; });
+  if (miss.length) console.log('⚠️ ' + sheetName + ' 缺少字段：' + miss.join('、'));
 }
 
 // 关联/人员/选项字段的单元格是 DBCellValue：{ Value:[{id,str}], display, ... }
 // 取 str（关联/人员显示名），其次 nickname/name/text，最后 display。
 function textOf(p){
   if (p == null) return '';
-  if (typeof p !== 'object') return String(p);
-  return p.str || p.nickname || p.name || p.text || p.title || '';
+  if (typeof p !== 'object') {
+    var t = String(p);
+    // 兜底：任何被字符串化的对象（[object Promise] / [object Object]）都当空值丢掉
+    return /^\[object /.test(t) ? '' : t;
+  }
+  var s = p.str || p.nickname || p.name || p.text || p.title || '';
+  s = String(s);
+  return /^\[object /.test(s) ? '' : s;
 }
 
+// 单元格取值：两个脚本环境下都是同步的
+//   2.0 -> DBCellValue 对象 { Value:[{id,str}], display }
+//   1.0 -> 普通数组 ["热线二部"] / 字符串 / 数字
 function cellValue(sheet, row, fmap, name){
   var fid = fmap[name];
   if (!fid) return null;
@@ -65,8 +84,7 @@ function cellValue(sheet, row, fmap, name){
   } catch (e) { return null; }
 }
 
-function readRows(sheet, fields, tag, zone, cols){
-  var fmap = fieldMap(sheet);
+function readRows(sheet, fmap, fields, tag, zone, cols){
   var total = sheet.RecordRange().Count;
   var out = [];
   for (var r = 1; r <= total; r++){
@@ -113,18 +131,20 @@ function main(){
   var cols = ['类型','战区'];
   HOTLINE_FIELDS.concat(NOBUY_FIELDS).forEach(function(f){ if (cols.indexOf(f) < 0) cols.push(f); });
 
+  var tasks = [];
+  hlSheets.forEach(function(sh){ tasks.push({ sh: sh, fields: HOTLINE_FIELDS, tag: '热线' }); });
+  nbSheets.forEach(function(sh){ tasks.push({ sh: sh, fields: NOBUY_FIELDS, tag: '未购' }); });
+
   var rows = [], srcs = [], zones = [];
-  function take(sheets, fields, tag){
-    sheets.forEach(function(sh){
-      var z = ZONE || guessZone(sh.Name) || '本战区';
-      if (zones.indexOf(z) < 0) zones.push(z);
-      var got = readRows(sh, fields, tag, z, cols);
-      rows = rows.concat(got);
-      srcs.push(sh.Name + '(' + got.length + '条)');
-    });
-  }
-  take(hlSheets, HOTLINE_FIELDS, '热线');
-  take(nbSheets, NOBUY_FIELDS, '未购');
+  tasks.forEach(function(t){
+    var z = ZONE || guessZone(t.sh.Name) || '本战区';
+    if (zones.indexOf(z) < 0) zones.push(z);
+    var fmap = fieldMap(t.sh);
+    warnMissing(t.sh.Name, fmap, t.fields);
+    var got = readRows(t.sh, fmap, t.fields, t.tag, z, cols);
+    rows = rows.concat(got);
+    srcs.push(t.sh.Name + '(' + got.length + '条)');
+  });
 
   var payload = {
     meta: { zone: zones.join('、') || '本战区', generatedAt: new Date().toISOString(), source: srcs.join(' + ') },
@@ -132,7 +152,7 @@ function main(){
     rows: rows
   };
   emit(JSON.stringify(payload));
-  console.log('共 ' + rows.length + ' 条记录');
+  console.log('共 ' + rows.length + ' 条记录，涵盖战区：' + zones.join('、'));
   return payload;
 }
 
