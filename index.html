@@ -673,14 +673,14 @@ var DASH = (function(){
       var convPrev = i===0?100:rate(s.value||0, stages[i-1].value||0);
       bindTip(p, (function(s,convPrev,convFromTop,i){ return function(){
         return '<b>'+esc(s.stage)+'</b><br><span class="k">数量</span>'+fmtInt(s.value)+
-               '<br><span class="k">较上一阶段</span>'+pct(convPrev)+
+               (s.note ? '' : '<br><span class="k">较上一阶段</span>'+pct(convPrev)) +
                '<br><span class="k">占首阶段</span>'+pct(convFromTop);
       };})(s,convPrev,convFromTop,i));
       svg.appendChild(p);
       var lab = svgEl('text',{x:labelW-12, y:y+h/2+4, 'text-anchor':'end', class:'fnl-label'}); lab.textContent = s.stage; svg.appendChild(lab);
       var val = svgEl('text',{x:W-valW+10, y:y+h/2, class:'fnl-val'}); val.textContent = (s.money?money(s.value):fmtInt(s.value)); svg.appendChild(val);
       var cv = svgEl('text',{x:W-valW+10, y:y+h/2+14, class:'fnl-conv'});
-      cv.textContent = i===0 ? '基数 100%' : ('环节 '+pct(convPrev)+' · 累计 '+pct(convFromTop));
+      cv.textContent = i===0 ? '基数 100%' : (s.note ? s.note : ('环节 '+pct(convPrev)+' · 累计 '+pct(convFromTop)));
       svg.appendChild(cv);
     });
     host.appendChild(svg);
@@ -1242,7 +1242,10 @@ var DASH = (function(){
     ], 'var(--s1)');
     D.funnel($('ovFunnelNB'), [
       {stage:'承接数据',value:c.n.承接数据},{stage:'首轮完播',value:c.n.首轮完播},
-      {stage:'首轮单量',value:c.n.首轮单量},{stage:'总成交单量',value:c.n.总成交单量}
+      {stage:'首轮单量',value:c.n.首轮单量},
+      // 总成交单量 = 首轮 + 往期复购，不是首轮单量的下游，故只标"占承接"
+      {stage:'总成交单量',value:c.n.总成交单量,
+       note:'占承接 '+D.pct(c.n.成交率)+'（含往期复购）'}
     ], 'var(--s2)');
 
     var rs = roundOrder(rows);
@@ -1359,7 +1362,9 @@ var DASH = (function(){
     ]);
     D.funnel($('nbFunnel'), [
       {stage:'承接数据',value:s.承接数据},{stage:'首轮完播',value:s.首轮完播},
-      {stage:'首轮单量',value:s.首轮单量},{stage:'总成交单量',value:s.总成交单量}
+      {stage:'首轮单量',value:s.首轮单量},
+      {stage:'总成交单量',value:s.总成交单量,
+       note:'占承接 '+D.pct(s.成交率)+'（含往期复购 '+D.fmtInt(s.往期单量)+' 单）'}
     ], 'var(--s2)');
 
     var rs = roundOrder(nb), grps = D.uniqVals(nb,'组别');
