@@ -3,27 +3,33 @@
    放在任意一个战区管理系统的脚本编辑器里直接运行。
    - 按【字段名】读取，字段顺序被调整不影响结果
    - 只读源表：热线日报表 / 未购日报表，不依赖任何统计表、合并表
-   - 运行后把控制台打印的 JSON 整段复制，粘贴进网页看板
+   - 输出分段打印（每段 700 字），因为脚本日志面板会把超长的单行截断。
+     运行完在日志区全选复制（Cmd/Ctrl+A → Cmd/Ctrl+C），
+     整段粘进看板的「导入 AirScript 数据」即可，看板会自动拼接。
    ============================================================ */
 
-// 表名可按战区改；脚本会自动匹配"包含关键字"的表，通常无需改动
+// 表名按"包含关键字"匹配，通常无需改动
 var HOTLINE_KEY = '热线日报';
 var NOBUY_KEY   = '未购日报';
-var ZONE        = '';   // 留空则自动从表名推断，如"一战区热线日报表" -> 一战区
+// ZONE 留空则自动从表名推断，如"一战区热线日报表" -> 一战区
+var ZONE = '';
 
 var HOTLINE_FIELDS = ['轮次','部门','组别','员工','引流渠道','创建时间','广告费','进线量','注册',
-  '当日完播','采集总','定金','实发单量','实发金额','签收金额','线上产出','线上单量','战区'];
+  '当日完播','采集总','定金','实发单量','实发金额','签收金额','线上产出','线上单量'];
 var NOBUY_FIELDS = ['轮次','部门','组别','员工','引流渠道','客户类型','创建时间','线索成本','承接数据',
   '首轮完播','首轮单量','首轮发货业绩','往期完播','往期单量','往期发货业绩',
   '总成交单量','总发货业绩','总活跃客户','总待激活','流失','签收业绩'];
 
-function findSheetByKey(key){
-  var n = Application.Sheets.Count;
+var CHUNK = 700;
+
+// 返回所有匹配的表：单战区文档只有一张，总管理系统里每个战区各一张，全部导出
+function findSheetsByKey(key){
+  var n = Application.Sheets.Count, out = [];
   for (var i = 1; i <= n; i++){
     var s = Application.Sheets.Item(i);
-    if (s.Name && s.Name.indexOf(key) >= 0 && s.Name.indexOf('统计') < 0 && s.Name.indexOf('📊') < 0) return s;
+    if (s.Name && s.Name.indexOf(key) >= 0 && s.Name.indexOf('统计') < 0 && s.Name.indexOf('📊') < 0) out.push(s);
   }
-  return null;
+  return out;
 }
 
 function fieldMap(sheet){
@@ -32,41 +38,52 @@ function fieldMap(sheet){
   return m;
 }
 
-// 单元格取值：兼容 人员/关联/选项 等对象型字段
+// 关联/人员/选项字段的单元格是 DBCellValue：{ Value:[{id,str}], display, ... }
+// 取 str（关联/人员显示名），其次 nickname/name/text，最后 display。
+function textOf(p){
+  if (p == null) return '';
+  if (typeof p !== 'object') return String(p);
+  return p.str || p.nickname || p.name || p.text || p.title || '';
+}
+
 function cellValue(sheet, row, fmap, name){
   var fid = fmap[name];
   if (!fid) return null;
   try {
     var v = sheet.RecordRange(row, fid).Value;
-    if (v && typeof v === 'object'){
-      if (Array.isArray(v)) {
-        return v.map(function(p){ return (p && (p.nickname || p.name || p.text)) || p; }).join(',');
-      }
-      if (Array.isArray(v.Value)) {
-        return v.Value.map(function(p){ return (p && (p.nickname || p.name || p.text || p.userId)) || p; }).join(',');
-      }
-      if (v.Value !== undefined) return v.Value;
-      return null;
+    if (v == null) return null;
+    if (typeof v !== 'object') return v;
+    if (Array.isArray(v)){
+      return v.map(textOf).filter(function(x){ return x !== ''; }).join(',');
     }
-    return v;
+    if (Array.isArray(v.Value)){
+      var joined = v.Value.map(textOf).filter(function(x){ return x !== ''; }).join(',');
+      return joined || (v.display || '');
+    }
+    if (v.Value !== undefined && typeof v.Value !== 'object') return v.Value;
+    return v.display || '';
   } catch (e) { return null; }
 }
 
-function readRows(sheet, fields, tag, zone){
+function readRows(sheet, fields, tag, zone, cols){
   var fmap = fieldMap(sheet);
   var total = sheet.RecordRange().Count;
   var out = [];
   for (var r = 1; r <= total; r++){
-    var o = { 类型: tag, 战区: zone };
-    var hasData = false;
-    for (var i = 0; i < fields.length; i++){
-      var name = fields[i];
-      var v = cellValue(sheet, r, fmap, name);
-      if (name === '战区'){ if (v) o.战区 = v; continue; }
-      o[name] = v;
-      if (v !== null && v !== '' && v !== 0) hasData = true;
+    var rec = [], hasData = false;
+    for (var c = 0; c < cols.length; c++){
+      var name = cols[c], v;
+      if (name === '类型') v = tag;
+      else if (name === '战区') v = zone;
+      else if (fields.indexOf(name) < 0) v = null;
+      else {
+        v = cellValue(sheet, r, fmap, name);
+        // 创建时间是系统自动填的，不能当作"这一行有数据"的依据，否则空行也会被导出
+        if (name !== '创建时间' && v !== null && v !== '' && v !== 0) hasData = true;
+      }
+      rec.push(v === undefined ? null : v);
     }
-    if (hasData) out.push(o);
+    if (hasData) out.push(rec);
   }
   return out;
 }
@@ -76,25 +93,46 @@ function guessZone(name){
   return m ? m[1] : '';
 }
 
-function main(){
-  var hlSheet = findSheetByKey(HOTLINE_KEY);
-  var nbSheet = findSheetByKey(NOBUY_KEY);
-  var zone = ZONE || guessZone(hlSheet && hlSheet.Name) || guessZone(nbSheet && nbSheet.Name) || '本战区';
+// 分段打印：日志面板会截断超长单行，所以切成小段，看板端自动拼接
+function emit(str){
+  var total = Math.ceil(str.length / CHUNK);
+  console.log('==== 数据开始：共 ' + total + ' 段，请在日志区全选复制后粘进看板 ====');
+  for (var i = 0; i < total; i++){
+    console.log('@@' + (i + 1) + '@@' + str.substr(i * CHUNK, CHUNK) + '@@/@@');
+  }
+  console.log('==== 数据结束 ====');
+}
 
-  var detail = [];
-  var srcs = [];
-  if (hlSheet){ var hl = readRows(hlSheet, HOTLINE_FIELDS, '热线', zone); detail = detail.concat(hl); srcs.push(hlSheet.Name + '(' + hl.length + '条)'); }
-  else console.log('⚠️ 未找到包含「' + HOTLINE_KEY + '」的数据表');
-  if (nbSheet){ var nb = readRows(nbSheet, NOBUY_FIELDS, '未购', zone); detail = detail.concat(nb); srcs.push(nbSheet.Name + '(' + nb.length + '条)'); }
-  else console.log('⚠️ 未找到包含「' + NOBUY_KEY + '」的数据表');
+function main(){
+  var hlSheets = findSheetsByKey(HOTLINE_KEY);
+  var nbSheets = findSheetsByKey(NOBUY_KEY);
+  if (!hlSheets.length) console.log('未找到包含「' + HOTLINE_KEY + '」的数据表');
+  if (!nbSheets.length) console.log('未找到包含「' + NOBUY_KEY + '」的数据表');
+
+  // 列式输出：所有行共用一份表头，体积比对象数组小一半以上
+  var cols = ['类型','战区'];
+  HOTLINE_FIELDS.concat(NOBUY_FIELDS).forEach(function(f){ if (cols.indexOf(f) < 0) cols.push(f); });
+
+  var rows = [], srcs = [], zones = [];
+  function take(sheets, fields, tag){
+    sheets.forEach(function(sh){
+      var z = ZONE || guessZone(sh.Name) || '本战区';
+      if (zones.indexOf(z) < 0) zones.push(z);
+      var got = readRows(sh, fields, tag, z, cols);
+      rows = rows.concat(got);
+      srcs.push(sh.Name + '(' + got.length + '条)');
+    });
+  }
+  take(hlSheets, HOTLINE_FIELDS, '热线');
+  take(nbSheets, NOBUY_FIELDS, '未购');
 
   var payload = {
-    meta: { zone: zone, generatedAt: new Date().toISOString(), source: srcs.join(' + ') },
-    detail: detail
+    meta: { zone: zones.join('、') || '本战区', generatedAt: new Date().toISOString(), source: srcs.join(' + ') },
+    cols: cols,
+    rows: rows
   };
-  console.log('==== 复制下面这一整段 JSON ====');
-  console.log(JSON.stringify(payload));
-  console.log('==== 共 ' + detail.length + ' 条记录 ====');
+  emit(JSON.stringify(payload));
+  console.log('共 ' + rows.length + ' 条记录');
   return payload;
 }
 
