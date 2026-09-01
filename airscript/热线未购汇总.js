@@ -35,10 +35,21 @@ function findSheetsByKey(key){
 // ⚠️ 本脚本要求脚本环境 AirScript 2.0（新建脚本时在 + 右侧的下拉里选）。
 // 在 1.0 环境下 GetFields() 返回的 f.name 是 Promise，会变成 "[object Promise]"，
 // 导致字段名->id 的映射整体错位、取到完全错误的列；而 1.0 的沙箱又缺少可用的
-// Promise.all/async 支持，无法在脚本内绕开。所以统一用 2.0。
+// 字段名 -> 字段 id。总管理系统里的表是跨文档同步表，首次打开、元数据还没加载完时
+// f.name 会是一个 Promise，字符串化后变成 "[object Promise]"，会让整张映射表错位、
+// 取到完全不相干的列。这里做自检并明确报出来，绝不静默出错。
 function fieldMap(sheet){
-  var m = {};
-  sheet.GetFields().forEach(function(f){ m[String(f.name)] = f.id; });
+  var m = {}, pending = 0;
+  sheet.GetFields().forEach(function(f){
+    var nm = String(f.name);
+    if (nm.indexOf('[object ') === 0) pending++;
+    m[nm] = f.id;
+  });
+  if (pending){
+    console.log('⛔ ' + sheet.Name + ' 有 ' + pending + ' 个字段名尚未加载完成（同步表首次打开时会这样）。');
+    console.log('   请先在左侧点开这些数据表、等表格完全加载出来，然后重新运行本脚本。');
+    throw new Error('字段名未就绪：' + sheet.Name);
+  }
   return m;
 }
 
