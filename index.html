@@ -570,13 +570,27 @@ var DASH = (function(){
   function ratio(a, b){ return b ? (a/b) : 0; }
   function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
 
-  /* WPS 日期可能是 ISO 串 / "yyyy/MM/dd" 文本 / Excel 序列号 */
+  /* WPS 日期可能是 ISO 串 / "yyyy/MM/dd" 文本 / Excel 序列号（数字或数字字符串） */
+  // Excel 序列号换算出的是一个 UTC 时刻；必须用 UTC 分量还原日历日，
+  // 否则在东八区读 46265.72（=17:16Z）会被算成第二天。
+  function fromSerial(n){
+    var d = new Date(Math.round((n - 25569) * 86400 * 1000));
+    if (isNaN(d.getTime())) return null;
+    return new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
+  }
+  // 合理的序列号区间：约 1954-01-01 ~ 2064-01-01，避免把"1"这种轮次号误当日期
+  function isSerial(n){ return isFinite(n) && n >= 20000 && n <= 60000; }
   function toDate(v){
     if (v==null||v==='') return null;
-    if (typeof v === 'number') return new Date(Math.round((v-25569)*86400*1000));
-    var m = String(v).match(/(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})/);
+    if (typeof v === 'number') return isSerial(v) ? fromSerial(v) : null;
+    var s = String(v).trim();
+    if (/^\d+(\.\d+)?$/.test(s)){
+      var n = parseFloat(s);
+      return isSerial(n) ? fromSerial(n) : null;
+    }
+    var m = s.match(/(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})/);
     if (m) return new Date(+m[1], +m[2]-1, +m[3]);
-    var d = new Date(v);
+    var d = new Date(s);
     return isNaN(d.getTime())?null:d;
   }
   function dateStr(v){
