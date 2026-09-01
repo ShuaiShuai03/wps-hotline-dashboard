@@ -1524,10 +1524,26 @@ var DASH = (function(){
     return out;
   }
   function pieTitle(t, rows){ return rows.__dropped ? t+'（已过滤未填写 '+rows.__dropped+' 行）' : t; }
+  /* 占比图的空状态：过滤后一个扇区都不剩时，仍然占住这一格并写明为什么是空的。
+     否则整块图会凭空消失，用户只会觉得"这里本来有张图，怎么没了"。 */
+  function emptyCol(host, title, text){
+    var col = D.el('div','donut-col');
+    if (title) col.appendChild(D.el('h3', null, D.esc(title)));
+    col.appendChild(D.el('div','empty-chart', D.esc(text || '当前筛选下没有数据')));
+    host.appendChild(col);
+    return col;
+  }
+  function donutNote(col, text){
+    var e = D.el('div', null, D.esc(text));
+    e.style.cssText = 'font-size:12px;line-height:1.5;color:var(--ink-3);text-align:center';
+    col.appendChild(e);
+    return e;
+  }
   function pie(host, list, valFn, dimKey, title, opts){
     var rows = pieRows(list, valFn, dimKey);
-    if (!rows.length) return false;
-    opts = opts || {}; opts.title = pieTitle(title, rows);
+    opts = opts || {};
+    if (!rows.length){ emptyCol(host, title, opts.emptyText); return false; }
+    opts.title = pieTitle(title, rows);
     D.donut(host, rows, opts);
     return true;
   }
@@ -1645,26 +1661,61 @@ var DASH = (function(){
     }), {xLabel:'投入（广告费/线索成本）', yLabel:'产出', rLabel:'线索量', moneyX:true, moneyY:true, diagonal:true});
 
     var host = $('ovDonuts'); D.clear(host);
-    pie(host, depts, function(d){ return d.cost; }, '部门', '投入占比（按部门）', {centerLabel:'总投入', money:true});
-    pie(host, depts, function(d){ return d.out; }, '部门', '产出占比（按部门）', {centerLabel:'总产出', money:true});
-    pie(host, depts, function(d){ return d.h.进线量+d.n.承接数据; }, '部门', '线索量占比（按部门）', {centerLabel:'总线索'});
-    pie(host, depts, function(d){ return d.orders; }, '部门', '成交单量占比（按部门）', {centerLabel:'总单量'});
+    pie(host, depts, function(d){ return d.cost; }, '部门', '投入占比（按部门）',
+        {centerLabel:'总投入', money:true, emptyText:'当前筛选下没有任何部门填报广告费/线索成本'});
+    pie(host, depts, function(d){ return d.out; }, '部门', '产出占比（按部门）',
+        {centerLabel:'总产出', money:true, emptyText:'当前筛选下没有任何部门产生产出'});
+    pie(host, depts, function(d){ return d.h.进线量+d.n.承接数据; }, '部门', '线索量占比（按部门）',
+        {centerLabel:'总线索', emptyText:'当前筛选下没有进线/承接数据'});
+    pie(host, depts, function(d){ return d.orders; }, '部门', '成交单量占比（按部门）',
+        {centerLabel:'总单量', emptyText:'当前筛选下没有成交单量'});
+    roiDonut(host, depts, c, q);
+  }
 
-    // 投产贡献：投产比是比率，不可直接相加成整体，因此扇区取"净产出 = 产出 − 投入"
-    var roiMap = {};
-    depts.forEach(function(d){ roiMap[d.name] = d.roi; });
+  /* 第 5 图 —— 投产贡献。
+     投产比是比率，不能直接相加成整体，所以整体投产 ≥ 1 时按「净产出 = 产出 − 投入」分配贡献。
+     但整体投产 < 1 时每个部门的净产出都是负数，"只保留正值"会把整张图过滤成空，
+     用户看到的就是「占比结构」里凭空少了一个图。此时自动切成按「产出」画
+     ——产出可加、非负，一定画得出来——标题/图注/图例同步换成对比口径，
+     两种形态下中心都显示综合投产比，保证这一格恒有内容。 */
+  function roiDonut(host, depts, c, q){
+    var warn = q.costPartial ? ' ⚠ 投入不全' : '';
+    var roiMap = {}; depts.forEach(function(d){ roiMap[d.name] = d.roi; });
+
     var netRows = pieRows(depts, function(d){ return d.out - d.cost; }, '部门');
-    if (netRows.length){
-      D.donut(host, netRows, {title:pieTitle('投产贡献占比（净产出）', netRows)+(q.costPartial?' ⚠ 投入不全':''), centerLabel:'综合投产', money:true});
-      var col = host.lastChild;
-      var vEl = col.querySelector('.donut-center .v'), lEl = col.querySelector('.donut-center .l');
-      if (vEl) vEl.textContent = c.roi.toFixed(2) + 'x';
-      if (lEl) lEl.textContent = '综合投产';
-      [].forEach.call(col.querySelectorAll('.dlegend .r .n'), function(n){
-        var r = roiMap[n.textContent];
-        if (r != null) n.textContent = n.textContent + ' · ' + r.toFixed(2) + 'x';
-      });
+    // 形态 A 的门槛：投入填过、整体投产 ≥ 1、且确实有净产出为正的部门
+    var useNet = c.cost > 0 && c.roi >= 1 && netRows.length > 0;
+    var rows = useNet ? netRows : pieRows(depts, function(d){ return d.out; }, '部门');
+    var title = useNet ? '投产贡献占比（净产出）' : '投产对比（按产出）';
+
+    if (!rows.length){
+      emptyCol(host, title + warn, c.cost > 0
+        ? '当前筛选下没有任何部门产生产出（已投入 '+D.money(c.cost)+'，投产 0.00x）'
+        : '当前筛选下既没有产出，也没有投入填报，无法计算投产');
+      return;
     }
+    D.donut(host, rows, {title:pieTitle(title, rows)+warn, centerLabel:'综合投产', money:true});
+    var col = host.lastChild;
+    // 中心：综合投产比。投入全空时比率算不出来，显示"—"而不是 0.00x（0 会被读成"投产为零"）
+    var vEl = col.querySelector('.donut-center .v'), lEl = col.querySelector('.donut-center .l');
+    if (vEl) vEl.textContent = c.cost > 0 ? c.roi.toFixed(2) + 'x' : '—';
+    if (lEl) lEl.textContent = '综合投产';
+    // 图例每行追加该部门自己的投产倍数（没填投入的部门标"投产—"）
+    [].forEach.call(col.querySelectorAll('.dlegend .r .n'), function(n){
+      var r = roiMap[n.textContent];
+      n.textContent = n.textContent + (r ? ' · ' + r.toFixed(2) + 'x' : ' · 投产—');
+    });
+    var note;
+    if (c.cost <= 0){
+      note = '投入（广告费+线索成本）未填报，无法计算投产，扇区按产出占比展示';
+    } else if (!useNet){
+      note = '本期整体投产 ' + c.roi.toFixed(2) + 'x < 1，无净产出可分配，故按产出占比展示，倍数见图例';
+    } else {
+      var neg = dropUnfilled(depts).filter(function(d){ return !(d.out - d.cost > 0); }).length;
+      note = neg ? '扇区 = 产出 − 投入；已排除 ' + neg + ' 个净产出为负的部门'
+                 : '扇区 = 该部门产出 − 投入';
+    }
+    donutNote(col, note);
   }
 
   function trendSeries(rows, kind){
@@ -1737,11 +1788,14 @@ var DASH = (function(){
     }), {money:true, color:cvar(1), valueLabel:'实发金额'});
 
     var host = $('hlDonuts'); D.clear(host);
-    var okAd = pie(host, dd, function(d){ return d.h.广告费; }, '部门', '广告费占比（部门）', {centerLabel:'总广告费', money:true});
-    if (!okAd) host.appendChild(D.el('div','empty-chart','当前筛选下没有任何部门填报广告费'));
-    pie(host, dd, function(d){ return d.h.实发金额; }, '部门', '实发金额占比（部门）', {centerLabel:'实发合计', money:true});
-    pie(host, byDim(hl,'组别'), function(d){ return d.h.实发金额; }, '组别', '实发金额占比（组别）', {centerLabel:'实发合计', money:true});
-    pie(host, byDim(hl,'引流渠道'), function(d){ return d.h.进线量; }, '引流渠道', '进线量占比（渠道）', {centerLabel:'总进线'});
+    pie(host, dd, function(d){ return d.h.广告费; }, '部门', '广告费占比（部门）',
+        {centerLabel:'总广告费', money:true, emptyText:'当前筛选下没有任何部门填报广告费'});
+    pie(host, dd, function(d){ return d.h.实发金额; }, '部门', '实发金额占比（部门）',
+        {centerLabel:'实发合计', money:true, emptyText:'当前筛选下没有部门产生实发金额'});
+    pie(host, byDim(hl,'组别'), function(d){ return d.h.实发金额; }, '组别', '实发金额占比（组别）',
+        {centerLabel:'实发合计', money:true, emptyText:'当前筛选下没有组别产生实发金额'});
+    pie(host, byDim(hl,'引流渠道'), function(d){ return d.h.进线量; }, '引流渠道', '进线量占比（渠道）',
+        {centerLabel:'总进线', emptyText:'当前筛选下没有渠道进线量'});
   }
 
   function renderNobuy(rows){
@@ -1800,9 +1854,10 @@ var DASH = (function(){
     D.legend($('nbStackLegend'), bs);
 
     var host = $('nbDonuts'); D.clear(host);
-    var okCt = pie(host, byDim(nb,'客户类型'), function(d){ return d.n.承接数据; }, '客户类型', '客户类型（承接量）', {centerLabel:'总承接'});
-    var okCh = pie(host, byDim(nb,'引流渠道'), function(d){ return d.n.总发货业绩; }, '引流渠道', '渠道发货业绩', {centerLabel:'总业绩', money:true});
-    if (!okCt && !okCh) host.appendChild(D.el('div','empty-chart','当前筛选下没有客户结构字段'));
+    pie(host, byDim(nb,'客户类型'), function(d){ return d.n.承接数据; }, '客户类型', '客户类型（承接量）',
+        {centerLabel:'总承接', emptyText:'当前筛选下没有填写客户类型的承接数据'});
+    pie(host, byDim(nb,'引流渠道'), function(d){ return d.n.总发货业绩; }, '引流渠道', '渠道发货业绩',
+        {centerLabel:'总业绩', money:true, emptyText:'当前筛选下没有填写引流渠道的发货业绩'});
 
     D.ranking($('nbRank'), byDim(nb,'组别').map(function(d){
       return {name:d.name, value:d.n.总发货业绩, sub:'成交率 '+D.pct(d.n.成交率)+' · 客单 '+D.money(d.n.客单价)};
