@@ -32,12 +32,10 @@ function findSheetsByKey(key){
   return out;
 }
 
-// ⚠️ 本脚本要求脚本环境 AirScript 2.0（新建脚本时在 + 右侧的下拉里选）。
-// 在 1.0 环境下 GetFields() 返回的 f.name 是 Promise，会变成 "[object Promise]"，
-// 导致字段名->id 的映射整体错位、取到完全错误的列；而 1.0 的沙箱又缺少可用的
-// 字段名 -> 字段 id。总管理系统里的表是跨文档同步表，首次打开、元数据还没加载完时
-// f.name 会是一个 Promise，字符串化后变成 "[object Promise]"，会让整张映射表错位、
-// 取到完全不相干的列。这里做自检并明确报出来，绝不静默出错。
+// 字段名 -> 字段 id。RecordRange 只认字段 id，用字段名会报 "Field: 部门 not Exist"。
+// 总管理系统里的表是跨文档同步表，首次打开、元数据还没加载完时 f.name 会是一个
+// Promise，字符串化后变成 "[object Promise]"，会让整张映射表错位、取到完全不相干的列。
+// 这里做自检并明确报出来，绝不静默出错。（脚本环境 1.0 / 2.0 都跑得通。）
 function fieldMap(sheet){
   var m = {}, pending = 0;
   sheet.GetFields().forEach(function(f){
@@ -59,40 +57,73 @@ function warnMissing(sheetName, fmap, fields){
   if (miss.length) console.log('⚠️ ' + sheetName + ' 缺少字段：' + miss.join('、'));
 }
 
+// 任何被字符串化的对象（[object Promise] / [object Object]）都是取值失败的标志
+function isBad(x){
+  if (x == null) return false;
+  var s = String(x);
+  return s.indexOf('[object ') === 0 || s === 'undefined';
+}
+
 // 关联/人员/选项字段的单元格是 DBCellValue：{ Value:[{id,str}], display, ... }
 // 取 str（关联/人员显示名），其次 nickname/name/text，最后 display。
 function textOf(p){
   if (p == null) return '';
   if (typeof p !== 'object') {
     var t = String(p);
-    // 兜底：任何被字符串化的对象（[object Promise] / [object Object]）都当空值丢掉
-    return /^\[object /.test(t) ? '' : t;
+    return isBad(t) ? '' : t;
   }
   var s = p.str || p.nickname || p.name || p.text || p.title || '';
   s = String(s);
-  return /^\[object /.test(s) ? '' : s;
+  return isBad(s) ? '' : s;
 }
 
-// 单元格取值：两个脚本环境下都是同步的
+// 从 RecordRange(...).Value 里抽出可用的标量
 //   2.0 -> DBCellValue 对象 { Value:[{id,str}], display }
-//   1.0 -> 普通数组 ["热线二部"] / 字符串 / 数字
+//   1.0 -> 普通数组 ["热线二部"] / 字符串 / 数字；关联字段则是懒加载代理（见下）
+function fromValue(v){
+  if (v == null) return null;
+  if (typeof v !== 'object') return isBad(v) ? '' : v;
+  if (Array.isArray(v)){
+    return v.map(textOf).filter(function(x){ return x !== ''; }).join(',');
+  }
+  if (Array.isArray(v.Value)){
+    var joined = v.Value.map(textOf).filter(function(x){ return x !== ''; }).join(',');
+    if (joined !== '') return joined;
+    return isBad(v.display) ? '' : (v.display || '');
+  }
+  if (v.Value !== undefined && typeof v.Value !== 'object') return isBad(v.Value) ? '' : v.Value;
+  if (Array.isArray(v._core)){
+    var j2 = v._core.map(textOf).filter(function(x){ return x !== ''; }).join(',');
+    if (j2 !== '') return j2;
+  }
+  return isBad(v.display) ? '' : (v.display || '');
+}
+
+// 单元格取值。
+// 脚本环境 1.0 下，关联/人员/创建人这类需要跨表拉数据的字段（Lookup / OneWayLink /
+// CreatedBy），RecordRange(row, fid).Value 返回的是一个懒加载代理：它上面每个属性
+// （.Value / .display / .str …）读出来都是一个 Promise，字符串化后就是 "[object Promise]"。
+// 而 1.0 的 Promise 是残缺实现（.then 是 undefined），解析器又不支持 async/await，
+// 所以没法等它 resolve。
+// 好在同一个 RecordRange 上的 .Text 是**同步**的显示文本（"热线二部" / "一部五组" /
+// "陈建纹"），实测三战区三张表全部字段 0 失败。所以：先按 .Value 取，
+// 只有 .Value 取回 [object …] 时才退回 .Text；空单元格保持原样（不然数字列的空格会变成 "0"）。
+// 2.0 下 .Value 一直可用，永远走不到 .Text 分支，行为不变。
 function cellValue(sheet, row, fmap, name){
   var fid = fmap[name];
   if (!fid) return null;
-  try {
-    var v = sheet.RecordRange(row, fid).Value;
-    if (v == null) return null;
-    if (typeof v !== 'object') return v;
-    if (Array.isArray(v)){
-      return v.map(textOf).filter(function(x){ return x !== ''; }).join(',');
-    }
-    if (Array.isArray(v.Value)){
-      var joined = v.Value.map(textOf).filter(function(x){ return x !== ''; }).join(',');
-      return joined || (v.display || '');
-    }
-    if (v.Value !== undefined && typeof v.Value !== 'object') return v.Value;
-    return v.display || '';
-  } catch (e) { return null; }
+  var rr;
+  try { rr = sheet.RecordRange(row, fid); } catch (e) { return null; }
+  var out = null;
+  try { out = fromValue(rr.Value); } catch (e) { out = null; }
+  if (!isBad(out)) return out;
+  var t = null;
+  try { t = rr.Text; } catch (e) { t = null; }
+  if (t != null && typeof t !== 'object'){
+    t = String(t);
+    if (!isBad(t)) return t === '' ? null : t;
+  }
+  return null;
 }
 
 function readRows(sheet, fmap, fields, tag, zone, cols){
@@ -162,7 +193,9 @@ function main(){
     cols: cols,
     rows: rows
   };
-  emit(JSON.stringify(payload));
+  var text = JSON.stringify(payload);
+  if (text.indexOf('[object ') >= 0) console.log('⚠️ 输出里仍有未解析的对象（[object …]），请把日志发给维护者');
+  emit(text);
   console.log('共 ' + rows.length + ' 条记录，涵盖战区：' + zones.join('、'));
   return payload;
 }
