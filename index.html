@@ -54,40 +54,40 @@ h1,h2,h3{margin:0}
 .app{display:grid;grid-template-columns:232px 1fr;min-height:100vh}
 .nav{background:var(--nav);color:var(--nav-ink);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
 .brand{padding:20px 18px 16px;border-bottom:1px solid var(--nav-line)}
-.brand .mark{display:flex;align-items:center;gap:9px;font-size:15px;font-weight:700;letter-spacing:.4px}
+.brand .mark{display:flex;align-items:center;gap:9px;font-size:16px;font-weight:700;letter-spacing:.4px}
 .brand .mark span.dotgrid{display:grid;grid-template-columns:repeat(2,5px);gap:2px}
 .brand .mark span.dotgrid i{width:5px;height:5px;border-radius:1px;display:block}
-.brand .sub{margin-top:7px;font-size:11.5px;color:var(--nav-ink-2);line-height:1.6}
+.brand .sub{margin-top:7px;font-size:12.5px;color:var(--nav-ink-2);line-height:1.6}
 .navsec{padding:14px 12px 4px}
 .navsec .t{font-size:10.5px;letter-spacing:1.4px;text-transform:uppercase;color:var(--nav-ink-2);padding:0 8px 8px}
-.navitem{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:9px 10px;border-radius:8px;border:0;background:transparent;color:var(--nav-ink-2);font:inherit;font-size:13.5px;cursor:pointer;transition:background .14s,color .14s}
+.navitem{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:10px 11px;border-radius:8px;border:0;background:transparent;color:var(--nav-ink-2);font:inherit;font-size:14.5px;cursor:pointer;transition:background .14s,color .14s}
 .navitem:hover{background:var(--nav-2);color:var(--nav-ink)}
 .navitem[aria-current="true"]{background:var(--nav-2);color:var(--nav-ink);font-weight:600;box-shadow:inset 2.5px 0 0 var(--accent)}
 .navitem svg{width:16px;height:16px;flex:none;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-.navitem .badge{margin-left:auto;font-size:11px;color:var(--nav-ink-2);font-variant-numeric:tabular-nums}
-.navfoot{margin-top:auto;padding:14px 18px 18px;border-top:1px solid var(--nav-line);font-size:11px;color:var(--nav-ink-2);line-height:1.7;word-break:break-all}
+.navitem .badge{margin-left:auto;font-size:12px;color:var(--nav-ink-2);font-variant-numeric:tabular-nums}
+.navfoot{margin-top:auto;padding:14px 18px 18px;border-top:1px solid var(--nav-line);font-size:12px;color:var(--nav-ink-2);line-height:1.7;word-break:break-all}
 .navfoot b{color:var(--nav-ink);font-weight:600}
 .navbtns{padding:10px 12px;display:flex;flex-direction:column;gap:7px}
 
 .main{min-width:0;display:flex;flex-direction:column}
 .topbar{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:8}
 .topline{display:flex;align-items:center;gap:14px;padding:14px 24px 12px;flex-wrap:wrap}
-.topline h1{font-size:19px;font-weight:700}
-.topline .desc{font-size:12.5px;color:var(--ink-3)}
+.topline h1{font-size:23px;font-weight:700}
+.topline .desc{font-size:13.5px;color:var(--ink-3)}
 .topline .right{margin-left:auto;display:flex;gap:8px;align-items:center}
 .filterbar{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:0 24px 12px}
-.flabel{font-size:11.5px;color:var(--ink-3);white-space:nowrap}
+.flabel{font-size:12.5px;color:var(--ink-3);white-space:nowrap}
 .fctrl{display:flex;align-items:center;gap:6px}
-select.f,input.f{appearance:none;background:var(--surface-2);border:1px solid var(--line);border-radius:8px;color:var(--ink);font:inherit;font-size:12.5px;padding:6px 10px;font-family:"Noto Sans SC",sans-serif;max-width:170px}
+select.f,input.f{appearance:none;background:var(--surface-2);border:1px solid var(--line);border-radius:8px;color:var(--ink);font:inherit;font-size:13.5px;padding:7px 11px;font-family:"Noto Sans SC",sans-serif;max-width:190px}
 select.f{padding-right:26px;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'><path d='M1 1l4 4 4-4' fill='none' stroke='%237b8695' stroke-width='1.6' stroke-linecap='round'/></svg>");background-repeat:no-repeat;background-position:right 8px center}
 select.f:focus-visible,input.f:focus-visible,.btn:focus-visible,.navitem:focus-visible,.chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .fsep{width:1px;height:18px;background:var(--line)}
-.fcount{margin-left:auto;font-size:11.5px;color:var(--ink-3)}
+.fcount{margin-left:auto;font-size:12.5px;color:var(--ink-3)}
 .chips{display:flex;gap:6px;flex-wrap:wrap}
-.chip{border:1px solid var(--line);background:var(--surface-2);color:var(--ink-2);border-radius:99px;padding:5px 12px;font:inherit;font-size:12px;cursor:pointer}
+.chip{border:1px solid var(--line);background:var(--surface-2);color:var(--ink-2);border-radius:99px;padding:6px 14px;font:inherit;font-size:13px;cursor:pointer}
 .chip[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);font-weight:600}
 
-.btn{appearance:none;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);border-radius:8px;padding:7px 13px;font:inherit;font-size:12.5px;cursor:pointer;transition:background .14s,border-color .14s;display:inline-flex;align-items:center;gap:6px;justify-content:center}
+.btn{appearance:none;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);border-radius:8px;padding:8px 14px;font:inherit;font-size:13.5px;cursor:pointer;transition:background .14s,border-color .14s;display:inline-flex;align-items:center;gap:6px;justify-content:center}
 .btn:hover{border-color:var(--line-2)}
 .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
 .btn.primary:hover{filter:brightness(1.07)}
@@ -100,8 +100,8 @@ select.f:focus-visible,input.f:focus-visible,.btn:focus-visible,.navitem:focus-v
 /* ---------- cards ---------- */
 .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px 18px;box-shadow:var(--sh);min-width:0}
 .card>header{display:flex;align-items:baseline;gap:10px;margin-bottom:12px;flex-wrap:wrap}
-.card h2{font-size:14.5px;font-weight:700}
-.card .note{font-size:11.5px;color:var(--ink-3)}
+.card h2{font-size:16.5px;font-weight:700}
+.card .note{font-size:12.5px;color:var(--ink-3)}
 .card .right{margin-left:auto;display:flex;align-items:center;gap:10px}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
 .row3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:14px}
@@ -111,105 +111,105 @@ select.f:focus-visible,input.f:focus-visible,.btn:focus-visible,.navitem:focus-v
 @media (max-width:1180px){.row2,.row3,.row12,.row21{grid-template-columns:1fr}}
 
 /* KPI */
-.kpis{display:grid;gap:12px;margin-bottom:14px;grid-template-columns:repeat(auto-fit,minmax(178px,1fr))}
-.kpi{background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:13px 15px 11px;box-shadow:var(--sh);position:relative;overflow:hidden}
-.kpi .l{font-size:11.5px;color:var(--ink-3);display:flex;align-items:center;gap:6px}
+.kpis{display:grid;gap:12px;margin-bottom:14px;grid-template-columns:repeat(auto-fit,minmax(196px,1fr))}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:15px 17px 13px;box-shadow:var(--sh);position:relative;overflow:hidden}
+.kpi .l{font-size:13px;color:var(--ink-3);display:flex;align-items:center;gap:6px}
 .kpi .l i{width:6px;height:6px;border-radius:2px;flex:none}
-.kpi .v{font-size:27px;line-height:1.15;margin-top:5px;font-family:"Barlow Condensed","Noto Sans SC",sans-serif;font-weight:600}
-.kpi .v u{text-decoration:none;font-size:13px;color:var(--ink-3);margin-left:2px}
-.kpi .sub{font-size:11px;color:var(--ink-3);margin-top:3px}
-.kpi .spark{position:absolute;right:0;bottom:0;width:88px;height:34px;opacity:.5}
+.kpi .v{font-size:36px;line-height:1.1;margin-top:6px;font-family:"Barlow Condensed","Noto Sans SC",sans-serif;font-weight:600}
+.kpi .v u{text-decoration:none;font-size:16px;color:var(--ink-3);margin-left:2px}
+.kpi .sub{font-size:12px;color:var(--ink-3);margin-top:5px;line-height:1.5}
+.kpi .spark{position:absolute;right:0;bottom:0;width:96px;height:38px;opacity:.42}
 .kpi.hero{grid-column:span 2}
 @media (max-width:700px){.kpi.hero{grid-column:span 1}}
 
 /* stat strip */
-.strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface);box-shadow:var(--sh)}
-.strip .cell{padding:12px 14px;border-right:1px solid var(--line)}
+.strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(142px,1fr));gap:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface);box-shadow:var(--sh)}
+.strip .cell{padding:13px 16px;border-right:1px solid var(--line)}
 .strip .cell:last-child{border-right:0}
-.strip .cell .l{font-size:11px;color:var(--ink-3)}
-.strip .cell .v{font-size:19px;margin-top:3px;font-family:"Barlow Condensed","Noto Sans SC",sans-serif;font-weight:600}
+.strip .cell .l{font-size:12.5px;color:var(--ink-3)}
+.strip .cell .v{font-size:25px;margin-top:4px;font-family:"Barlow Condensed","Noto Sans SC",sans-serif;font-weight:600}
 
 /* funnel */
 .funnel-svg{width:100%;height:auto;display:block}
-.fnl-label{fill:var(--ink-2);font-size:11.5px}
-.fnl-val{fill:var(--ink);font-size:13px;font-weight:600;font-family:"Barlow Condensed",sans-serif}
-.fnl-conv{fill:var(--ink-3);font-size:10.5px}
+.fnl-label{fill:var(--ink-2);font-size:13.5px}
+.fnl-val{fill:var(--ink);font-size:17px;font-weight:600;font-family:"Barlow Condensed",sans-serif}
+.fnl-conv{fill:var(--ink-3);font-size:12px}
 
 /* generic svg chart */
 .chart{width:100%;height:auto;display:block;overflow:visible}
 .axis-line{stroke:var(--line-2)}
 .gridline{stroke:var(--line);stroke-dasharray:2,4}
-.axis-text{fill:var(--ink-3);font-size:10.5px;font-family:"Noto Sans SC",sans-serif}
+.axis-text{fill:var(--ink-3);font-size:12.5px;font-family:"Noto Sans SC",sans-serif}
 .axis-text.strong{fill:var(--ink-2)}
 .mark{transition:opacity .12s}
 .mark:hover{opacity:.82}
 .series-line{fill:none;stroke-width:2}
 .series-dot{stroke:var(--surface);stroke-width:2}
 .crosshair{stroke:var(--line-2);stroke-dasharray:3,3}
-.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--ink-2)}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--ink-2)}
 .legend span{display:inline-flex;align-items:center;gap:6px}
 .legend i{width:9px;height:9px;border-radius:2.5px}
-.empty-chart{padding:34px 0;text-align:center;color:var(--ink-3);font-size:12.5px}
+.empty-chart{padding:30px 0;text-align:center;color:var(--ink-3);font-size:13px}
 
 /* donut */
-.donutgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:16px}
+.donutgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
 .donut-col{display:flex;flex-direction:column;align-items:center;gap:9px;min-width:0;width:100%}
-.donut-col h3{font-size:12.5px;font-weight:600;color:var(--ink-2);text-align:center}
-.donut-wrap{position:relative;width:172px;height:172px;flex:none}
+.donut-col h3{font-size:13.5px;font-weight:600;color:var(--ink-2);text-align:center}
+.donut-wrap{position:relative;width:196px;height:196px;flex:none}
 .donut-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;text-align:center}
-.donut-center .v{font-size:20px;font-family:"Barlow Condensed",sans-serif;font-weight:600}
-.donut-center .l{font-size:10.5px;color:var(--ink-3)}
+.donut-center .v{font-size:24px;font-family:"Barlow Condensed",sans-serif;font-weight:600}
+.donut-center .l{font-size:12px;color:var(--ink-3)}
 .donut-seg{transition:opacity .12s}
 .donut-seg:hover{opacity:.78}
-.dlegend{display:flex;flex-direction:column;gap:5px;width:100%;max-width:230px;font-size:11.5px}
+.dlegend{display:flex;flex-direction:column;gap:7px;width:100%;max-width:250px;font-size:13px}
 .dlegend .r{display:flex;align-items:center;gap:7px}
 .dlegend i{width:9px;height:9px;border-radius:2.5px;flex:none}
 .dlegend .n{color:var(--ink-2);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .dlegend .p{font-weight:600}
 
 /* 小倍数条形：每个指标各自一套刻度，避免量纲差异把小系列压成一条线 */
-.multibars{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px 20px}
+.multibars{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:18px 22px}
 .mb{min-width:0}
-.mb .mbt{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--ink-2);margin-bottom:4px}
+.mb .mbt{display:flex;align-items:center;gap:7px;font-size:13.5px;font-weight:600;color:var(--ink-2);margin-bottom:6px}
 .mb .mbt i{width:9px;height:9px;border-radius:2.5px;flex:none}
 
 /* heatmap */
 .hm-cell{stroke:var(--surface);stroke-width:2;rx:3}
-.hm-txt{font-size:10px;font-family:"Barlow Condensed",sans-serif;font-weight:600}
+.hm-txt{font-size:12.5px;font-family:"Barlow Condensed",sans-serif;font-weight:600}
 
 /* ranking */
-.rank{display:flex;flex-direction:column;gap:9px}
+.rank{display:flex;flex-direction:column;gap:12px}
 .rank .r{display:grid;grid-template-columns:20px 1fr;gap:10px;align-items:center}
-.rank .idx{font-size:11px;color:var(--ink-3);text-align:right;font-variant-numeric:tabular-nums}
+.rank .idx{font-size:12.5px;color:var(--ink-3);text-align:right;font-variant-numeric:tabular-nums}
 .rank .r.top1 .idx,.rank .r.top2 .idx,.rank .r.top3 .idx{color:var(--accent);font-weight:700}
 .rank .body{min-width:0}
-.rank .head{display:flex;align-items:baseline;gap:8px;font-size:12px;margin-bottom:4px}
+.rank .head{display:flex;align-items:baseline;gap:8px;font-size:13.5px;margin-bottom:5px}
 .rank .name{color:var(--ink);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.rank .sub{color:var(--ink-3);font-size:11px}
-.rank .v{margin-left:auto;font-weight:600;font-family:"Barlow Condensed",sans-serif;font-size:14px}
-.rank .track{height:7px;border-radius:4px;background:var(--track);overflow:hidden}
+.rank .sub{color:var(--ink-3);font-size:12px}
+.rank .v{margin-left:auto;font-weight:600;font-family:"Barlow Condensed",sans-serif;font-size:18px}
+.rank .track{height:8px;border-radius:4px;background:var(--track);overflow:hidden}
 .rank .fill{height:100%;border-radius:4px}
 
 /* table */
 .tblwrap{overflow:auto;border:1px solid var(--line);border-radius:12px;max-height:640px}
-table{border-collapse:separate;border-spacing:0;width:100%;font-size:12.5px}
-thead th{position:sticky;top:0;z-index:2;background:var(--surface-2);color:var(--ink-2);font-weight:600;text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);white-space:nowrap;cursor:pointer;user-select:none}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:13.5px}
+thead th{position:sticky;top:0;z-index:2;background:var(--surface-2);color:var(--ink-2);font-weight:600;text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);white-space:nowrap;cursor:pointer;user-select:none}
 thead th:hover{color:var(--ink)}
 thead th .ar{opacity:.32;margin-left:4px;font-size:9px}
 thead th.sorted{color:var(--accent)}
 thead th.sorted .ar{opacity:1}
-tbody td{padding:8px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+tbody td{padding:10px 14px;border-bottom:1px solid var(--line);white-space:nowrap}
 tbody td.n{text-align:right}
 tbody tr:hover td{background:var(--surface-2)}
-tfoot td{position:sticky;bottom:0;background:var(--surface-3);font-weight:700;padding:9px 12px;border-top:1px solid var(--line-2);white-space:nowrap}
+tfoot td{position:sticky;bottom:0;background:var(--surface-3);font-weight:700;padding:11px 14px;border-top:1px solid var(--line-2);white-space:nowrap}
 tfoot td.n{text-align:right}
-.pill{display:inline-flex;align-items:center;gap:5px;padding:2px 9px;border-radius:99px;font-size:11px;font-weight:600}
+.pill{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:99px;font-size:12px;font-weight:600}
 .pill.a{background:color-mix(in srgb,var(--s1) 15%,var(--surface));color:var(--s1)}
 .pill.b{background:color-mix(in srgb,var(--s2) 15%,var(--surface));color:var(--s2)}
 .pill.c{background:color-mix(in srgb,var(--s3) 15%,var(--surface));color:var(--s3)}
 
 /* tooltip */
-.tip{position:fixed;z-index:60;pointer-events:none;background:var(--nav);color:var(--nav-ink);border:1px solid var(--nav-line);border-radius:9px;padding:8px 11px;font-size:12px;line-height:1.65;box-shadow:0 10px 30px -10px rgba(0,0,0,.6);opacity:0;transition:opacity .1s;max-width:280px}
+.tip{position:fixed;z-index:60;pointer-events:none;background:var(--nav);color:var(--nav-ink);border:1px solid var(--nav-line);border-radius:10px;padding:10px 13px;font-size:13.5px;line-height:1.65;box-shadow:0 10px 30px -10px rgba(0,0,0,.6);opacity:0;transition:opacity .1s;max-width:280px}
 .tip.on{opacity:1}
 .tip b{font-weight:600}
 .tip .k{color:var(--nav-ink-2);margin-right:8px}
@@ -342,7 +342,7 @@ dialog::backdrop{background:rgba(8,12,18,.55)}
 
         <div class="row12">
           <section class="card">
-            <header><h2>部门产出结构</h2><span class="note">热线实发金额 + 未购发货业绩（堆叠）</span></header>
+            <header><h2>部门产出结构</h2><span class="note">热线实发金额 + 热线线上产出 + 未购发货业绩（堆叠）</span></header>
             <div id="ovDeptBars"></div>
           </section>
           <section class="card">
@@ -352,7 +352,7 @@ dialog::backdrop{background:rgba(8,12,18,.55)}
         </div>
 
         <section class="card full">
-          <header><h2>占比结构</h2><span class="note">广告费、产出、进线量、成交单量的部门分布</span></header>
+          <header><h2>占比结构</h2><span class="note">广告费、产出、进线量、成交单量、投产贡献的部门分布</span></header>
           <div class="donutgrid" id="ovDonuts"></div>
         </section>
       </section>
@@ -580,6 +580,45 @@ var DASH = (function(){
     return out.sort(function(a,b){ return a.localeCompare(b,'zh-CN',{numeric:true}); });
   }
 
+  /* ---------- 导入解析 ----------
+     兼容三种粘贴内容：
+     1) 完整 JSON（对象数组 detail 或列式 cols+rows）
+     2) 脚本日志整段复制：含 @@序号@@ 分段标记，混着时间戳等噪声
+     3) 上面两种的任意组合
+  */
+  function parsePayload(text){
+    var t = String(text || '').trim();
+    if (!t) throw new Error('内容为空');
+    if (/@@\d+@@/.test(t)){
+      // 每段形如 @@序号@@内容@@/@@，段与段之间的时间戳、来源标注等日志噪声直接丢弃
+      var re = /@@(\d+)@@([^]*?)@@\/@@/g, m, parts = [];
+      while ((m = re.exec(t)) !== null){
+        parts.push({ i: parseInt(m[1], 10), s: m[2].replace(/[\r\n]+/g, '') });
+      }
+      if (!parts.length) throw new Error('分段标记不完整，请确认已在日志区全选复制（含每段结尾的 @@/@@）');
+      parts.sort(function(a,b){ return a.i - b.i; });
+      // 校验分段完整、无缺号
+      for (var k = 0; k < parts.length; k++){
+        if (parts[k].i !== k + 1) throw new Error('分段不连续：缺少第 ' + (k + 1) + ' 段，请在日志区全选后重新复制');
+      }
+      t = parts.map(function(p){ return p.s; }).join('');
+    }
+    var i = t.indexOf('{');
+    var j = t.lastIndexOf('}');
+    if (i < 0 || j <= i) throw new Error('没找到 JSON 内容');
+    var obj = JSON.parse(t.slice(i, j + 1));
+    // 列式 → 对象数组
+    if (obj.cols && obj.rows){
+      obj.detail = obj.rows.map(function(r){
+        var o = {};
+        obj.cols.forEach(function(c, ci){ o[c] = r[ci]; });
+        return o;
+      });
+    }
+    if (!obj.detail || !obj.detail.length) throw new Error('没有数据行');
+    return obj;
+  }
+
   /* ---------- DOM / SVG ---------- */
   function $(id){ return document.getElementById(id); }
   function el(tag, cls, html){ var e=document.createElement(tag); if(cls)e.className=cls; if(html!=null)e.innerHTML=html; return e; }
@@ -631,7 +670,7 @@ var DASH = (function(){
     });
   }
   function sparkline(vals, color){
-    var W=88,H=34,pad=3;
+    var W=96,H=38,pad=3;
     var svg = svgEl('svg',{class:'spark',viewBox:'0 0 '+W+' '+H,preserveAspectRatio:'none'});
     var max = Math.max.apply(null, vals)||1, min = Math.min.apply(null, vals);
     var span = (max-min)||1;
@@ -655,14 +694,14 @@ var DASH = (function(){
   function funnel(host, stages, color, opts){
     clear(host); opts = opts||{};
     if (!stages.length || !stages[0].value){ host.appendChild(el('div','empty-chart','当前筛选下没有数据')); return; }
-    var W=580, rowH=54, padT=6, padB=8, labelW=92, valW=176;
+    var W=660, rowH=64, padT=8, padB=10, labelW=112, valW=214;
     var H = padT+padB+stages.length*rowH;
     var svg = svgEl('svg',{class:'funnel-svg',viewBox:'0 0 '+W+' '+H,preserveAspectRatio:'xMidYMid meet'});
     var bodyX = labelW, bodyW = W-labelW-valW;
     var top = stages[0].value||1;
     var widths = stages.map(function(s){ return Math.max(0.06, (s.value||0)/top) * bodyW; });
     stages.forEach(function(s,i){
-      var y = padT + i*rowH, h = rowH-16;
+      var y = padT + i*rowH, h = rowH-18;
       var w = widths[i], x = bodyX + (bodyW-w)/2;
       var wNext = i<stages.length-1 ? widths[i+1] : w*0.9;
       var xNext = bodyX + (bodyW-wNext)/2;
@@ -677,9 +716,9 @@ var DASH = (function(){
                '<br><span class="k">占首阶段</span>'+pct(convFromTop);
       };})(s,convPrev,convFromTop,i));
       svg.appendChild(p);
-      var lab = svgEl('text',{x:labelW-12, y:y+h/2+4, 'text-anchor':'end', class:'fnl-label'}); lab.textContent = s.stage; svg.appendChild(lab);
-      var val = svgEl('text',{x:W-valW+10, y:y+h/2, class:'fnl-val'}); val.textContent = (s.money?money(s.value):fmtInt(s.value)); svg.appendChild(val);
-      var cv = svgEl('text',{x:W-valW+10, y:y+h/2+14, class:'fnl-conv'});
+      var lab = svgEl('text',{x:labelW-14, y:y+h/2+5, 'text-anchor':'end', class:'fnl-label'}); lab.textContent = s.stage; svg.appendChild(lab);
+      var val = svgEl('text',{x:W-valW+12, y:y+h/2, class:'fnl-val'}); val.textContent = (s.money?money(s.value):fmtInt(s.value)); svg.appendChild(val);
+      var cv = svgEl('text',{x:W-valW+12, y:y+h/2+17, class:'fnl-conv'});
       cv.textContent = i===0 ? '基数 100%' : (s.note ? s.note : ('环节 '+pct(convPrev)+' · 累计 '+pct(convFromTop)));
       svg.appendChild(cv);
     });
@@ -691,8 +730,8 @@ var DASH = (function(){
     clear(host); opts = opts||{};
     if (!cats.length){ host.appendChild(el('div','empty-chart','当前筛选下没有数据')); return; }
     var stacked = !!opts.stacked, isMoney = !!opts.money;
-    var W=opts.W||620, labelW=opts.labelW||96, padR=opts.padR||96, padT=8, padB=24;
-    var rowH = opts.rowH || (stacked?34:Math.max(30, 20+series.length*13));
+    var W=opts.W||620, labelW=opts.labelW||108, padR=opts.padR||112, padT=8, padB=30;
+    var rowH = opts.rowH || (stacked?40:Math.max(34, 22+series.length*15));
     var H = padT+padB+cats.length*rowH;
     var svg = svgEl('svg',{class:'chart',viewBox:'0 0 '+W+' '+H,preserveAspectRatio:'xMidYMid meet'});
     var innerW = W-labelW-padR;
@@ -705,18 +744,18 @@ var DASH = (function(){
     for (var g=0; g<=4; g++){
       var gx = labelW + innerW*g/4;
       svg.appendChild(svgEl('line',{x1:gx,x2:gx,y1:padT,y2:padT+cats.length*rowH,class:'gridline'}));
-      var gt = svgEl('text',{x:gx,y:H-8,'text-anchor':'middle',class:'axis-text'});
+      var gt = svgEl('text',{x:gx,y:H-10,'text-anchor':'middle',class:'axis-text'});
       gt.textContent = isMoney?fmt(max*g/4):fmt(max*g/4); svg.appendChild(gt);
     }
     cats.forEach(function(c,i){
       var d = data[c]||{};
       var y = padT+i*rowH;
-      var lab = svgEl('text',{x:labelW-10,y:y+rowH/2+4,'text-anchor':'end',class:'axis-text strong'});
-      lab.textContent = c.length>7?c.slice(0,7)+'…':c;
-      if (c.length>7){ var tl=svgEl('title'); tl.textContent=c; lab.appendChild(tl); }
+      var lab = svgEl('text',{x:labelW-12,y:y+rowH/2+5,'text-anchor':'end',class:'axis-text strong'});
+      lab.textContent = c.length>8?c.slice(0,8)+'…':c;
+      if (c.length>8){ var tl=svgEl('title'); tl.textContent=c; lab.appendChild(tl); }
       svg.appendChild(lab);
       if (stacked){
-        var x = labelW, bh = Math.min(18, rowH*0.5);
+        var x = labelW, bh = Math.min(22, rowH*0.55);
         series.forEach(function(se,si){
           var v = num(d[se.key]); if (v<=0) return;
           var w = v/max*innerW;
@@ -728,10 +767,10 @@ var DASH = (function(){
           svg.appendChild(r);
           x += w;
         });
-        var tt = svgEl('text',{x:labelW+totals[i]/max*innerW+8,y:y+rowH/2+4,class:'axis-text strong'});
+        var tt = svgEl('text',{x:labelW+totals[i]/max*innerW+9,y:y+rowH/2+5,class:'axis-text strong'});
         tt.textContent = isMoney?money(totals[i]):fmtInt(totals[i]); svg.appendChild(tt);
       } else {
-        var bh2 = Math.min(13, (rowH-12)/series.length);
+        var bh2 = Math.min(16, (rowH-12)/series.length);
         series.forEach(function(se,si){
           var v = num(d[se.key]);
           var w = Math.max(v>0?2:0, v/max*innerW);
@@ -742,7 +781,7 @@ var DASH = (function(){
               return '<b>'+esc(c)+'</b><br><div class="row"><i style="background:'+se.color+'"></i>'+esc(se.name)+'</div><span class="k">数值</span>'+(se.money||isMoney?money(v):fmtInt(v));
             };})(c,{name:se.name,color:se.color||cvar(si),money:se.money},v));
             svg.appendChild(r2);
-            var vt = svgEl('text',{x:labelW+w+6,y:by+bh2/2+3.5,class:'axis-text'});
+            var vt = svgEl('text',{x:labelW+w+8,y:by+bh2/2+4.5,class:'axis-text'});
             vt.textContent = (se.money||isMoney)?money(v):fmtInt(v); svg.appendChild(vt);
           }
         });
@@ -760,7 +799,7 @@ var DASH = (function(){
       var box = el('div','mb');
       box.appendChild(el('div','mbt','<i style="background:'+(se.color||cvar(si))+'"></i>'+esc(se.name)));
       var chart = el('div');
-      barsH(chart, cats, [se], data, {money:!!se.money, W:380, labelW:opts.labelW||74, padR:opts.padR||84, rowH:opts.rowH||30});
+      barsH(chart, cats, [se], data, {money:!!se.money, W:352, labelW:opts.labelW||86, padR:opts.padR||96, rowH:opts.rowH||34});
       box.appendChild(chart);
       grid.appendChild(box);
     });
@@ -771,7 +810,7 @@ var DASH = (function(){
   function comboChart(host, x, series, opts){
     clear(host); opts = opts||{};
     if (!x.length){ host.appendChild(el('div','empty-chart','当前筛选下没有数据')); return; }
-    var W=960,H=opts.height||280,padL=56,padR=88,padT=18,padB=34;
+    var W=960,H=opts.height||300,padL=64,padR=96,padT=20,padB=42;
     var innerW=W-padL-padR, innerH=H-padT-padB;
     var svg = svgEl('svg',{class:'chart',viewBox:'0 0 '+W+' '+H,preserveAspectRatio:'xMidYMid meet'});
     var n = x.length, stepX = n>1?innerW/(n-1):0;
@@ -784,9 +823,9 @@ var DASH = (function(){
     for (var g=0; g<=4; g++){
       var gy = padT+innerH-innerH*g/4;
       svg.appendChild(svgEl('line',{x1:padL,x2:W-padR,y1:gy,y2:gy,class:'gridline'}));
-      if (lines.length){ var lt=svgEl('text',{x:padL-8,y:gy+3.5,'text-anchor':'end',class:'axis-text'});
+      if (lines.length){ var lt=svgEl('text',{x:padL-10,y:gy+4,'text-anchor':'end',class:'axis-text'});
         lt.textContent = lines[0].percent ? (Math.round(maxL*g/4*10)/10)+'%' : fmt(maxL*g/4); svg.appendChild(lt); }
-      if (bars.length){ var rt=svgEl('text',{x:W-padR+26,y:gy+3.5,class:'axis-text'});
+      if (bars.length){ var rt=svgEl('text',{x:W-padR+30,y:gy+4,class:'axis-text'});
         rt.textContent = fmt(maxR*g/4); svg.appendChild(rt); }
     }
     // 柱（同一 x 上并排）
@@ -807,11 +846,11 @@ var DASH = (function(){
         svg.appendChild(svgEl('path',{d:d+' L'+pts[pts.length-1][0].toFixed(2)+','+(padT+innerH)+' L'+pts[0][0].toFixed(2)+','+(padT+innerH)+' Z',fill:s.color,opacity:.1}));
       }
       svg.appendChild(svgEl('path',{d:d,stroke:s.color,class:'series-line'}));
-      pts.forEach(function(p){ svg.appendChild(svgEl('circle',{cx:p[0],cy:p[1],r:3.6,fill:s.color,class:'series-dot'})); });
+      pts.forEach(function(p){ svg.appendChild(svgEl('circle',{cx:p[0],cy:p[1],r:4.4,fill:s.color,class:'series-dot'})); });
     });
     // x 轴标签
     x.forEach(function(lab,i){
-      var t = svgEl('text',{x:px(i),y:H-12,'text-anchor':'middle',class:'axis-text'});
+      var t = svgEl('text',{x:px(i),y:H-14,'text-anchor':'middle',class:'axis-text strong'});
       t.textContent = lab; svg.appendChild(t);
     });
     svg.appendChild(svgEl('line',{x1:padL,x2:W-padR,y1:padT+innerH,y2:padT+innerH,class:'axis-line'}));
@@ -845,7 +884,7 @@ var DASH = (function(){
     var col = el('div','donut-col');
     if (opts.title) col.appendChild(el('h3',null,esc(opts.title)));
     var wrap = el('div','donut-wrap');
-    var svg = svgEl('svg',{viewBox:'0 0 100 100',width:'172',height:'172'});
+    var svg = svgEl('svg',{viewBox:'0 0 100 100',width:'196',height:'196'});
     var cx=50, cy=50, R=42, RI=27, angle=-90;
     rows.forEach(function(r,i){
       var v = num(r.value); var frac = total? v/total : 0;
@@ -910,19 +949,19 @@ var DASH = (function(){
   function heatmap(host, rowLabels, colLabels, matrix, opts){
     clear(host); opts = opts||{};
     if (!rowLabels.length || !colLabels.length){ host.appendChild(el('div','empty-chart','当前筛选下没有数据')); return; }
-    var labelW=100, cellW=Math.max(46, Math.min(96, 760/colLabels.length)), cellH=34, padT=26, padB=6;
+    var labelW=116, cellW=Math.max(60, Math.min(110, 820/colLabels.length)), cellH=42, padT=34, padB=8;
     var W = labelW + colLabels.length*cellW + 8;
     var H = padT + rowLabels.length*cellH + padB;
     var svg = svgEl('svg',{class:'chart',viewBox:'0 0 '+W+' '+H,preserveAspectRatio:'xMidYMid meet'});
     var flat=[]; matrix.forEach(function(r){ r.forEach(function(v){ if (v!=null) flat.push(v); }); });
     var max = Math.max.apply(null, flat.concat([0]))||1, min = Math.min.apply(null, flat.concat([0]));
     colLabels.forEach(function(c,ci){
-      var t = svgEl('text',{x:labelW+ci*cellW+cellW/2,y:padT-10,'text-anchor':'middle',class:'axis-text strong'});
+      var t = svgEl('text',{x:labelW+ci*cellW+cellW/2,y:padT-12,'text-anchor':'middle',class:'axis-text strong'});
       t.textContent = c; svg.appendChild(t);
     });
     rowLabels.forEach(function(rl,ri){
-      var t = svgEl('text',{x:labelW-10,y:padT+ri*cellH+cellH/2+4,'text-anchor':'end',class:'axis-text strong'});
-      t.textContent = rl.length>7?rl.slice(0,7)+'…':rl; svg.appendChild(t);
+      var t = svgEl('text',{x:labelW-12,y:padT+ri*cellH+cellH/2+5,'text-anchor':'end',class:'axis-text strong'});
+      t.textContent = rl.length>8?rl.slice(0,8)+'…':rl; svg.appendChild(t);
       colLabels.forEach(function(cl,ci){
         var v = matrix[ri][ci];
         var frac = (max-min)? ((v==null?min:v)-min)/(max-min) : 0;
@@ -935,7 +974,7 @@ var DASH = (function(){
         };})(rl,cl,v));
         svg.appendChild(cell);
         if (v!=null){
-          var txt = svgEl('text',{x:labelW+ci*cellW+cellW/2,y:padT+ri*cellH+cellH/2+4,'text-anchor':'middle',class:'hm-txt',
+          var txt = svgEl('text',{x:labelW+ci*cellW+cellW/2,y:padT+ri*cellH+cellH/2+5,'text-anchor':'middle',class:'hm-txt',
             fill: frac>0.55?'#fff':'var(--ink-2)'});
           txt.textContent = opts.percent?pct(v):fmt(v); svg.appendChild(txt);
         }
@@ -948,7 +987,7 @@ var DASH = (function(){
   function bubbles(host, points, opts){
     clear(host); opts = opts||{};
     if (!points.length){ host.appendChild(el('div','empty-chart','当前筛选下没有数据')); return; }
-    var W=620,H=320,padL=58,padR=22,padT=16,padB=40;
+    var W=640,H=340,padL=68,padR=26,padT=20,padB=50;
     var innerW=W-padL-padR, innerH=H-padT-padB;
     var svg = svgEl('svg',{class:'chart',viewBox:'0 0 '+W+' '+H,preserveAspectRatio:'xMidYMid meet'});
     var maxX = Math.max.apply(null, points.map(function(p){return p.x;}))/0.9 || 1;
@@ -957,9 +996,9 @@ var DASH = (function(){
     for (var g=0; g<=4; g++){
       var gy = padT+innerH-innerH*g/4;
       svg.appendChild(svgEl('line',{x1:padL,x2:W-padR,y1:gy,y2:gy,class:'gridline'}));
-      var t = svgEl('text',{x:padL-8,y:gy+3.5,'text-anchor':'end',class:'axis-text'}); t.textContent=fmt(maxY*g/4); svg.appendChild(t);
+      var t = svgEl('text',{x:padL-10,y:gy+4,'text-anchor':'end',class:'axis-text'}); t.textContent=fmt(maxY*g/4); svg.appendChild(t);
       var gx = padL+innerW*g/4;
-      var t2 = svgEl('text',{x:gx,y:H-18,'text-anchor':'middle',class:'axis-text'}); t2.textContent=fmt(maxX*g/4); svg.appendChild(t2);
+      var t2 = svgEl('text',{x:gx,y:H-24,'text-anchor':'middle',class:'axis-text'}); t2.textContent=fmt(maxX*g/4); svg.appendChild(t2);
     }
     // 投产 1:1 参考线（当两轴同量纲时有意义）
     if (opts.diagonal){
@@ -969,7 +1008,7 @@ var DASH = (function(){
     }
     points.forEach(function(p,i){
       var cx = padL + p.x/maxX*innerW, cy = padT+innerH - p.y/maxY*innerH;
-      var r = 6 + Math.sqrt(p.r/maxR)*16;
+      var r = 7 + Math.sqrt(p.r/maxR)*18;
       var c = svgEl('circle',{cx:cx.toFixed(2),cy:cy.toFixed(2),r:r.toFixed(2),fill:cvar(i),opacity:.72,
         stroke:'var(--surface)','stroke-width':2,class:'mark'});
       bindTip(c, (function(p){ return function(){
@@ -978,9 +1017,9 @@ var DASH = (function(){
                '<br><span class="k">'+esc(opts.rLabel||'规模')+'</span>'+fmtInt(p.r)+(p.sub?'<br><span class="k">'+esc(p.sub)+'</span>':'');
       };})(p));
       svg.appendChild(c);
-      var lb = svgEl('text',{x:cx,y:cy-r-5,'text-anchor':'middle',class:'axis-text strong'}); lb.textContent=p.name; svg.appendChild(lb);
+      var lb = svgEl('text',{x:cx,y:cy-r-7,'text-anchor':'middle',class:'axis-text strong'}); lb.textContent=p.name; svg.appendChild(lb);
     });
-    var xl = svgEl('text',{x:padL+innerW/2,y:H-4,'text-anchor':'middle',class:'axis-text'}); xl.textContent=opts.xLabel||''; svg.appendChild(xl);
+    var xl = svgEl('text',{x:padL+innerW/2,y:H-6,'text-anchor':'middle',class:'axis-text'}); xl.textContent=opts.xLabel||''; svg.appendChild(xl);
     svg.appendChild(svgEl('line',{x1:padL,x2:W-padR,y1:padT+innerH,y2:padT+innerH,class:'axis-line'}));
     host.appendChild(svg);
   }
@@ -1067,11 +1106,11 @@ var DASH = (function(){
     $:$, el:el, svgEl:svgEl, clear:clear, bindTip:bindTip, hideTip:hideTip,
     renderKpis:renderKpis, renderStrip:renderStrip, funnel:funnel, barsH:barsH, comboChart:comboChart,
     donut:donut, ranking:ranking, heatmap:heatmap, bubbles:bubbles, legend:legend, barsMulti:barsMulti,
-    dataTable:dataTable, toCSV:toCSV, sparkline:sparkline, colorFor:colorFor
+    dataTable:dataTable, toCSV:toCSV, sparkline:sparkline, colorFor:colorFor, parsePayload:parsePayload
   };
 })();
 </script>
-<script>window.__AIRSCRIPT__ = "/* ============================================================\n   热线 & 未购｜看板数据导出（AirScript · 只读）\n   放在任意一个战区管理系统的脚本编辑器里直接运行。\n   - 按【字段名】读取，字段顺序被调整不影响结果\n   - 只读源表：热线日报表 / 未购日报表，不依赖任何统计表、合并表\n   - 运行后把控制台打印的 JSON 整段复制，粘贴进网页看板\n   ============================================================ */\n\n// 表名可按战区改；脚本会自动匹配\"包含关键字\"的表，通常无需改动\nvar HOTLINE_KEY = '热线日报';\nvar NOBUY_KEY   = '未购日报';\nvar ZONE        = '';   // 留空则自动从表名推断，如\"一战区热线日报表\" -> 一战区\n\nvar HOTLINE_FIELDS = ['轮次','部门','组别','员工','引流渠道','创建时间','广告费','进线量','注册',\n  '当日完播','采集总','定金','实发单量','实发金额','签收金额','线上产出','线上单量','战区'];\nvar NOBUY_FIELDS = ['轮次','部门','组别','员工','引流渠道','客户类型','创建时间','线索成本','承接数据',\n  '首轮完播','首轮单量','首轮发货业绩','往期完播','往期单量','往期发货业绩',\n  '总成交单量','总发货业绩','总活跃客户','总待激活','流失','签收业绩'];\n\nfunction findSheetByKey(key){\n  var n = Application.Sheets.Count;\n  for (var i = 1; i <= n; i++){\n    var s = Application.Sheets.Item(i);\n    if (s.Name && s.Name.indexOf(key) >= 0 && s.Name.indexOf('统计') < 0 && s.Name.indexOf('📊') < 0) return s;\n  }\n  return null;\n}\n\nfunction fieldMap(sheet){\n  var m = {};\n  sheet.GetFields().forEach(function(f){ m[f.name] = f.id; });\n  return m;\n}\n\n// 单元格取值：兼容 人员/关联/选项 等对象型字段\nfunction cellValue(sheet, row, fmap, name){\n  var fid = fmap[name];\n  if (!fid) return null;\n  try {\n    var v = sheet.RecordRange(row, fid).Value;\n    if (v && typeof v === 'object'){\n      if (Array.isArray(v)) {\n        return v.map(function(p){ return (p && (p.nickname || p.name || p.text)) || p; }).join(',');\n      }\n      if (Array.isArray(v.Value)) {\n        return v.Value.map(function(p){ return (p && (p.nickname || p.name || p.text || p.userId)) || p; }).join(',');\n      }\n      if (v.Value !== undefined) return v.Value;\n      return null;\n    }\n    return v;\n  } catch (e) { return null; }\n}\n\nfunction readRows(sheet, fields, tag, zone){\n  var fmap = fieldMap(sheet);\n  var total = sheet.RecordRange().Count;\n  var out = [];\n  for (var r = 1; r <= total; r++){\n    var o = { 类型: tag, 战区: zone };\n    var hasData = false;\n    for (var i = 0; i < fields.length; i++){\n      var name = fields[i];\n      var v = cellValue(sheet, r, fmap, name);\n      if (name === '战区'){ if (v) o.战区 = v; continue; }\n      o[name] = v;\n      if (v !== null && v !== '' && v !== 0) hasData = true;\n    }\n    if (hasData) out.push(o);\n  }\n  return out;\n}\n\nfunction guessZone(name){\n  var m = String(name || '').match(/(.{1,4}战区)/);\n  return m ? m[1] : '';\n}\n\nfunction main(){\n  var hlSheet = findSheetByKey(HOTLINE_KEY);\n  var nbSheet = findSheetByKey(NOBUY_KEY);\n  var zone = ZONE || guessZone(hlSheet && hlSheet.Name) || guessZone(nbSheet && nbSheet.Name) || '本战区';\n\n  var detail = [];\n  var srcs = [];\n  if (hlSheet){ var hl = readRows(hlSheet, HOTLINE_FIELDS, '热线', zone); detail = detail.concat(hl); srcs.push(hlSheet.Name + '(' + hl.length + '条)'); }\n  else console.log('⚠️ 未找到包含「' + HOTLINE_KEY + '」的数据表');\n  if (nbSheet){ var nb = readRows(nbSheet, NOBUY_FIELDS, '未购', zone); detail = detail.concat(nb); srcs.push(nbSheet.Name + '(' + nb.length + '条)'); }\n  else console.log('⚠️ 未找到包含「' + NOBUY_KEY + '」的数据表');\n\n  var payload = {\n    meta: { zone: zone, generatedAt: new Date().toISOString(), source: srcs.join(' + ') },\n    detail: detail\n  };\n  console.log('==== 复制下面这一整段 JSON ====');\n  console.log(JSON.stringify(payload));\n  console.log('==== 共 ' + detail.length + ' 条记录 ====');\n  return payload;\n}\n\nmain();\n";</script>
+<script>window.__AIRSCRIPT__ = "/* ============================================================\n   热线 & 未购｜看板数据导出（AirScript · 只读）\n   放在任意一个战区管理系统的脚本编辑器里直接运行。\n   - 按【字段名】读取，字段顺序被调整不影响结果\n   - 只读源表：热线日报表 / 未购日报表，不依赖任何统计表、合并表\n   - 输出分段打印（每段 700 字），因为脚本日志面板会把超长的单行截断。\n     运行完在日志区全选复制（Cmd/Ctrl+A → Cmd/Ctrl+C），\n     整段粘进看板的「导入 AirScript 数据」即可，看板会自动拼接。\n   ============================================================ */\n\n// 表名按\"包含关键字\"匹配，通常无需改动\nvar HOTLINE_KEY = '热线日报';\nvar NOBUY_KEY   = '未购日报';\n// ZONE 留空则自动从表名推断，如\"一战区热线日报表\" -> 一战区\nvar ZONE = '';\n\nvar HOTLINE_FIELDS = ['轮次','部门','组别','员工','引流渠道','创建时间','广告费','进线量','注册',\n  '当日完播','采集总','定金','实发单量','实发金额','签收金额','线上产出','线上单量'];\nvar NOBUY_FIELDS = ['轮次','部门','组别','员工','引流渠道','客户类型','创建时间','线索成本','承接数据',\n  '首轮完播','首轮单量','首轮发货业绩','往期完播','往期单量','往期发货业绩',\n  '总成交单量','总发货业绩','总活跃客户','总待激活','流失','签收业绩'];\n\nvar CHUNK = 700;\n\nfunction findSheetByKey(key){\n  var n = Application.Sheets.Count;\n  for (var i = 1; i <= n; i++){\n    var s = Application.Sheets.Item(i);\n    if (s.Name && s.Name.indexOf(key) >= 0 && s.Name.indexOf('统计') < 0 && s.Name.indexOf('📊') < 0) return s;\n  }\n  return null;\n}\n\nfunction fieldMap(sheet){\n  var m = {};\n  sheet.GetFields().forEach(function(f){ m[f.name] = f.id; });\n  return m;\n}\n\n// 关联/人员/选项字段的单元格是 DBCellValue：{ Value:[{id,str}], display, ... }\n// 取 str（关联/人员显示名），其次 nickname/name/text，最后 display。\nfunction textOf(p){\n  if (p == null) return '';\n  if (typeof p !== 'object') return String(p);\n  return p.str || p.nickname || p.name || p.text || p.title || '';\n}\n\nfunction cellValue(sheet, row, fmap, name){\n  var fid = fmap[name];\n  if (!fid) return null;\n  try {\n    var v = sheet.RecordRange(row, fid).Value;\n    if (v == null) return null;\n    if (typeof v !== 'object') return v;\n    if (Array.isArray(v)){\n      return v.map(textOf).filter(function(x){ return x !== ''; }).join(',');\n    }\n    if (Array.isArray(v.Value)){\n      var joined = v.Value.map(textOf).filter(function(x){ return x !== ''; }).join(',');\n      return joined || (v.display || '');\n    }\n    if (v.Value !== undefined && typeof v.Value !== 'object') return v.Value;\n    return v.display || '';\n  } catch (e) { return null; }\n}\n\nfunction readRows(sheet, fields, tag, zone, cols){\n  var fmap = fieldMap(sheet);\n  var total = sheet.RecordRange().Count;\n  var out = [];\n  for (var r = 1; r <= total; r++){\n    var rec = [], hasData = false;\n    for (var c = 0; c < cols.length; c++){\n      var name = cols[c], v;\n      if (name === '类型') v = tag;\n      else if (name === '战区') v = zone;\n      else if (fields.indexOf(name) < 0) v = null;\n      else {\n        v = cellValue(sheet, r, fmap, name);\n        // 创建时间是系统自动填的，不能当作\"这一行有数据\"的依据，否则空行也会被导出\n        if (name !== '创建时间' && v !== null && v !== '' && v !== 0) hasData = true;\n      }\n      rec.push(v === undefined ? null : v);\n    }\n    if (hasData) out.push(rec);\n  }\n  return out;\n}\n\nfunction guessZone(name){\n  var m = String(name || '').match(/(.{1,4}战区)/);\n  return m ? m[1] : '';\n}\n\n// 分段打印：日志面板会截断超长单行，所以切成小段，看板端自动拼接\nfunction emit(str){\n  var total = Math.ceil(str.length / CHUNK);\n  console.log('==== 数据开始：共 ' + total + ' 段，请在日志区全选复制后粘进看板 ====');\n  for (var i = 0; i < total; i++){\n    console.log('@@' + (i + 1) + '@@' + str.substr(i * CHUNK, CHUNK) + '@@/@@');\n  }\n  console.log('==== 数据结束 ====');\n}\n\nfunction main(){\n  var hlSheet = findSheetByKey(HOTLINE_KEY);\n  var nbSheet = findSheetByKey(NOBUY_KEY);\n  var zone = ZONE || guessZone(hlSheet && hlSheet.Name) || guessZone(nbSheet && nbSheet.Name) || '本战区';\n\n  // 列式输出：所有行共用一份表头，体积比对象数组小一半以上\n  var cols = ['类型','战区'];\n  HOTLINE_FIELDS.concat(NOBUY_FIELDS).forEach(function(f){ if (cols.indexOf(f) < 0) cols.push(f); });\n\n  var rows = [], srcs = [];\n  if (hlSheet){\n    var hl = readRows(hlSheet, HOTLINE_FIELDS, '热线', zone, cols);\n    rows = rows.concat(hl); srcs.push(hlSheet.Name + '(' + hl.length + '条)');\n  } else console.log('未找到包含「' + HOTLINE_KEY + '」的数据表');\n  if (nbSheet){\n    var nb = readRows(nbSheet, NOBUY_FIELDS, '未购', zone, cols);\n    rows = rows.concat(nb); srcs.push(nbSheet.Name + '(' + nb.length + '条)');\n  } else console.log('未找到包含「' + NOBUY_KEY + '」的数据表');\n\n  var payload = {\n    meta: { zone: zone, generatedAt: new Date().toISOString(), source: srcs.join(' + ') },\n    cols: cols,\n    rows: rows\n  };\n  emit(JSON.stringify(payload));\n  console.log('共 ' + rows.length + ' 条记录');\n  return payload;\n}\n\nmain();\n";</script>
 <script>
 (function(){
   "use strict";
@@ -1132,6 +1171,8 @@ var DASH = (function(){
       var sel = $(f[0]), cur = sel.value, vals = D.uniqVals(rows, f[1]);
       sel.innerHTML = '<option value="">'+f[2]+'</option>' + vals.map(function(v){ return '<option value="'+D.esc(v)+'">'+D.esc(v)+'</option>'; }).join('');
       if (vals.indexOf(cur) >= 0) sel.value = cur;
+      // 源表里没填的维度（如尚未启用的引流渠道）直接隐藏，避免出现空/误导的下拉
+      sel.parentNode.hidden = vals.length === 0;
     });
     if (D.uniqVals(rows,'战区').length < 2) $('fZone').parentNode.hidden = true;
   }
@@ -1170,6 +1211,9 @@ var DASH = (function(){
     s.实发客单 = D.ratio(s.实发金额, s.实发单量);
     s.实发投产 = D.ratio(s.实发金额, s.广告费);
     s.线上投产 = D.ratio(s.线上产出, s.广告费);
+    // 热线产出口径 = 实发金额 + 线上产出
+    s.总产出 = s.实发金额 + s.线上产出;
+    s.总投产 = D.ratio(s.总产出, s.广告费);
     s.签收率 = rate(s.签收金额, s.实发金额);
     s.线索成本 = D.ratio(s.广告费, s.进线量);
     return s;
@@ -1189,7 +1233,7 @@ var DASH = (function(){
   function combined(rows){
     var p = split(rows), h = hlAgg(p.hl), n = nbAgg(p.nb);
     var cost = h.广告费 + n.线索成本;
-    var out = h.实发金额 + n.总发货业绩;
+    var out = h.实发金额 + h.线上产出 + n.总发货业绩;
     var orders = h.实发单量 + n.总成交单量;
     return { h:h, n:n, cost:cost, out:out, orders:orders,
              roi:D.ratio(out, cost), aov:D.ratio(out, orders), hlRows:p.hl, nbRows:p.nb };
@@ -1216,8 +1260,8 @@ var DASH = (function(){
   function renderOverview(rows){
     var c = combined(rows);
     D.renderKpis($('ovKpis'), [
-      {label:'总产出（实发+发货）', text:D.money(c.out), color:cvar(0), hero:true,
-       sub:'热线 '+D.money(c.h.实发金额)+' · 未购 '+D.money(c.n.总发货业绩),
+      {label:'总产出', text:D.money(c.out), color:cvar(0), hero:true,
+       sub:'实发 '+D.money(c.h.实发金额)+' · 线上 '+D.money(c.h.线上产出)+' · 未购发货 '+D.money(c.n.总发货业绩),
        spark:trendSeries(rows,'out')},
       {label:'总投入（广告费+线索成本）', text:D.money(c.cost), color:cvar(1), sub:'热线广告费 '+D.money(c.h.广告费)},
       {label:'综合投产比', text:c.roi.toFixed(2), unit:'x', color:cvar(2), sub:'产出 ÷ 投入'},
@@ -1258,9 +1302,9 @@ var DASH = (function(){
     D.legend($('ovTrendLegend'), series);
 
     var depts = byDim(rows, '部门');
-    var data = {}; depts.forEach(function(d){ data[d.name] = {热线:d.h.实发金额, 未购:d.n.总发货业绩}; });
+    var data = {}; depts.forEach(function(d){ data[d.name] = {热线:d.h.实发金额, 线上:d.h.线上产出, 未购:d.n.总发货业绩}; });
     D.barsH($('ovDeptBars'), depts.map(function(d){return d.name;}),
-      [{name:'热线实发金额',key:'热线',color:cvar(0)},{name:'未购发货业绩',key:'未购',color:cvar(1)}],
+      [{name:'热线实发金额',key:'热线',color:cvar(0)},{name:'热线线上产出',key:'线上',color:cvar(2)},{name:'未购发货业绩',key:'未购',color:cvar(1)}],
       data, {stacked:true, money:true});
 
     D.bubbles($('ovBubble'), depts.filter(function(d){ return d.cost>0 || d.out>0; }).map(function(d){
@@ -1273,6 +1317,23 @@ var DASH = (function(){
     D.donut(host, tint(depts.map(function(d){ return {name:d.name, value:d.out}; }).filter(function(r){return r.value>0;}),'部门'), {title:'产出占比（按部门）', centerLabel:'总产出', money:true});
     D.donut(host, tint(depts.map(function(d){ return {name:d.name, value:d.h.进线量+d.n.承接数据}; }).filter(function(r){return r.value>0;}),'部门'), {title:'线索量占比（按部门）', centerLabel:'总线索'});
     D.donut(host, tint(depts.map(function(d){ return {name:d.name, value:d.orders}; }).filter(function(r){return r.value>0;}),'部门'), {title:'成交单量占比（按部门）', centerLabel:'总单量'});
+
+    // 投产贡献：投产比是比率，不可直接相加成整体，因此扇区取"净产出 = 产出 − 投入"
+    var roiMap = {};
+    depts.forEach(function(d){ roiMap[d.name] = d.roi; });
+    var netRows = tint(depts.map(function(d){ return {name:d.name, value:d.out - d.cost}; })
+                            .filter(function(r){ return r.value > 0; }), '部门');
+    if (netRows.length){
+      D.donut(host, netRows, {title:'投产贡献占比（净产出）', centerLabel:'综合投产', money:true});
+      var col = host.lastChild;
+      var vEl = col.querySelector('.donut-center .v'), lEl = col.querySelector('.donut-center .l');
+      if (vEl) vEl.textContent = c.roi.toFixed(2) + 'x';
+      if (lEl) lEl.textContent = '综合投产';
+      [].forEach.call(col.querySelectorAll('.dlegend .r .n'), function(n){
+        var r = roiMap[n.textContent];
+        if (r != null) n.textContent = n.textContent + ' · ' + r.toFixed(2) + 'x';
+      });
+    }
   }
 
   function trendSeries(rows, kind){
@@ -1299,7 +1360,9 @@ var DASH = (function(){
       {label:'注册率', text:D.pct(s.注册率)}, {label:'完播率', text:D.pct(s.完播率)},
       {label:'采集率', text:D.pct(s.采集率)}, {label:'定金率', text:D.pct(s.定金率)},
       {label:'实发转化率', text:D.pct(s.实发转化率)}, {label:'实发客单', text:D.money(s.实发客单)},
-      {label:'线上投产', text:s.线上投产.toFixed(2)+'x'}, {label:'单线索成本', text:D.money(s.线索成本)}
+      {label:'线上投产', text:s.线上投产.toFixed(2)+'x'},
+      {label:'综合投产(实发+线上)', text:s.总投产.toFixed(2)+'x'},
+      {label:'单线索成本', text:D.money(s.线索成本)}
     ]);
     D.funnel($('hlFunnel'), [
       {stage:'进线量',value:s.进线量},{stage:'注册',value:s.注册},{stage:'当日完播',value:s.当日完播},
@@ -1558,8 +1621,7 @@ var DASH = (function(){
     var txt = $('jsonInput').value.trim();
     if (!txt){ $('importMsg').textContent='请先粘贴 JSON'; $('importMsg').className='msg err'; return; }
     try{
-      var obj = JSON.parse(txt);
-      if (!obj.detail || !obj.detail.length) throw new Error('缺少 detail 数组');
+      var obj = D.parsePayload(txt);
       load(obj);
       $('importMsg').textContent='导入成功，共 '+obj.detail.length+' 条记录';
       $('importMsg').className='msg ok';
