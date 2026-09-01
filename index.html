@@ -114,7 +114,7 @@ select.f:focus-visible,input.f:focus-visible,.btn:focus-visible,.navitem:focus-v
   .content{padding-left:32px;padding-right:32px}
   .kpis{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
   .donutgrid{grid-template-columns:repeat(auto-fit,minmax(270px,1fr))}
-  .multibars{grid-template-columns:repeat(auto-fit,minmax(380px,1fr))}
+  .multibars{grid-template-columns:repeat(auto-fit,minmax(380px,520px))}
 }
 
 /* KPI */
@@ -175,7 +175,7 @@ select.f:focus-visible,input.f:focus-visible,.btn:focus-visible,.navitem:focus-v
 .dlegend .p{font-weight:600}
 
 /* 小倍数条形：每个指标各自一套刻度，避免量纲差异把小系列压成一条线 */
-.multibars{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:18px 22px}
+.multibars{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,480px));gap:18px 22px;justify-content:start}
 .mb{min-width:0}
 .mb .mbt{display:flex;align-items:center;gap:7px;font-size:13.5px;font-weight:600;color:var(--ink-2);margin-bottom:6px}
 .mb .mbt i{width:9px;height:9px;border-radius:2.5px;flex:none}
@@ -199,8 +199,10 @@ select.f:focus-visible,input.f:focus-visible,.btn:focus-visible,.navitem:focus-v
 
 /* table */
 .tblwrap{overflow:auto;border:1px solid var(--line);border-radius:12px;max-height:calc(100vh - 300px);min-height:280px;
-  scrollbar-width:auto;scrollbar-color:var(--line-2) var(--surface-2);scrollbar-gutter:stable both-edges}
-/* 常显滚动条：不加这段，macOS 上滚动条只有在滚动时才短暂出现，看不到也拖不到 */
+  scrollbar-gutter:stable both-edges}
+/* 常显滚动条：不加这段，macOS 上滚动条只有在滚动时才短暂出现，看不到也拖不到。
+   注意：这里刻意不写 scrollbar-color / scrollbar-width —— Chrome 121+ 一旦见到这两个
+   标准属性，就会整套忽略下面的 ::-webkit-scrollbar 规则，滚动条又变回浮层隐藏式。 */
 .tblwrap::-webkit-scrollbar{width:14px;height:14px}
 .tblwrap::-webkit-scrollbar-track{background:var(--surface-2);border-radius:8px}
 .tblwrap::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:8px;border:3px solid var(--surface-2)}
@@ -254,13 +256,6 @@ dialog::backdrop{background:rgba(8,12,18,.55)}
 }
 </style>
 
-<style>
-/* Chrome 里只要元素上设了 scrollbar-width / scrollbar-color，::-webkit-scrollbar 的自定义样式
-   就会被整体忽略，macOS 下退回成"滚动时才短暂出现"的浮层滚动条（实测 offsetWidth-clientWidth = 2px）。
-   这里把这两个标准属性还原成 initial，让 core.css 里的 ::-webkit-scrollbar 规则重新生效，
-   滚动条才会常显、占位（实测 14px + gutter）。 */
-.tblwrap{scrollbar-width:initial;scrollbar-color:initial}
-</style>
 <div class="app">
   <aside class="nav">
     <div class="brand">
