@@ -8,6 +8,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap">
+<script>
+try{
+  var savedTheme=localStorage.getItem('wps_dashboard_theme');
+  if(savedTheme && savedTheme!=='auto') document.documentElement.setAttribute('data-theme',savedTheme);
+}catch(e){}
+</script>
 <style>
 :root{
   color-scheme: light;
@@ -45,6 +51,39 @@
   --track:#222a35;
   --sh:0 1px 2px rgba(0,0,0,.5),0 12px 28px -20px rgba(0,0,0,.9);
 }
+:root[data-theme="ocean"]{
+  color-scheme: light;
+  --ground:#eaf4f8; --surface:#fdfefe; --surface-2:#f1f8fb; --surface-3:#dcecf2;
+  --line:#c9dde6; --line-2:#9dbbc8;
+  --ink:#102a37; --ink-2:#496774; --ink-3:#708c98;
+  --nav:#0a2d3a; --nav-2:#123f4f; --nav-ink:#eefaff; --nav-ink-2:#9bc2d0; --nav-line:#1c5364;
+  --accent:#087ea4; --accent-soft:#d8eef5;
+  --s1:#087ea4; --s2:#ee7b45; --s3:#15947d; --s4:#7357b3; --s5:#c79a25; --s6:#18a6b8;
+  --good:#16784c; --warn:#a66c00; --crit:#bd4141; --track:#dcecf2;
+  --sh:0 1px 2px rgba(16,42,55,.06),0 12px 28px -20px rgba(16,42,55,.32);
+}
+:root[data-theme="forest"]{
+  color-scheme: light;
+  --ground:#f0f3ed; --surface:#fffefa; --surface-2:#f5f7f0; --surface-3:#e4e9df;
+  --line:#d4ddd0; --line-2:#aebdaf;
+  --ink:#17251a; --ink-2:#536456; --ink-3:#77857a;
+  --nav:#183224; --nav-2:#234531; --nav-ink:#f1f7f0; --nav-ink-2:#a6beaa; --nav-line:#31563e;
+  --accent:#2b7a4b; --accent-soft:#deeee2;
+  --s1:#2b7a4b; --s2:#d87a2f; --s3:#16877b; --s4:#7b5aa6; --s5:#b28b20; --s6:#258ba0;
+  --good:#247044; --warn:#a66c00; --crit:#b43e3e; --track:#e4e9df;
+  --sh:0 1px 2px rgba(23,37,26,.06),0 12px 28px -20px rgba(23,37,26,.3);
+}
+:root[data-theme="sand"]{
+  color-scheme: light;
+  --ground:#f5efe7; --surface:#fffdf9; --surface-2:#faf4ec; --surface-3:#eee2d4;
+  --line:#e4d5c4; --line-2:#cbb39c;
+  --ink:#2d2018; --ink-2:#6c594c; --ink-3:#927d6e;
+  --nav:#35241c; --nav-2:#493229; --nav-ink:#fff6ed; --nav-ink-2:#cbb3a2; --nav-line:#5a4034;
+  --accent:#c35b2b; --accent-soft:#f8dfd1;
+  --s1:#c35b2b; --s2:#d88a24; --s3:#3a8a68; --s4:#8057a6; --s5:#b19120; --s6:#268b9a;
+  --good:#347647; --warn:#a56500; --crit:#b83f3f; --track:#eee2d4;
+  --sh:0 1px 2px rgba(45,32,24,.06),0 12px 28px -20px rgba(45,32,24,.3);
+}
 *{box-sizing:border-box}
 body{margin:0;background:var(--ground);color:var(--ink);font-family:"Noto Sans SC","PingFang SC",system-ui,sans-serif;font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
 h1,h2,h3{margin:0}
@@ -68,6 +107,10 @@ h1,h2,h3{margin:0}
 .navfoot{margin-top:auto;padding:14px 18px 18px;border-top:1px solid var(--nav-line);font-size:12px;color:var(--nav-ink-2);line-height:1.7;word-break:break-all}
 .navfoot b{color:var(--nav-ink);font-weight:600}
 .navbtns{padding:10px 12px;display:flex;flex-direction:column;gap:7px}
+.themepicker{padding:8px 12px 12px;display:grid;gap:7px}
+.themepicker label{padding:0 8px;font-size:10.5px;letter-spacing:1.4px;color:var(--nav-ink-2)}
+.themepicker select{width:100%;border:1px solid var(--nav-line);border-radius:8px;background:var(--nav-2);color:var(--nav-ink);font:inherit;font-size:13.5px;padding:8px 10px}
+.themepicker select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
 .main{min-width:0;display:flex;flex-direction:column}
 .topbar{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:8}
@@ -283,7 +326,11 @@ dialog::backdrop{background:rgba(8,12,18,.55)}
 
     <nav class="navsec">
       <div class="t">分析视图</div>
-      <button class="navitem" data-view="overview" aria-current="true">
+      <button class="navitem" data-view="detail" aria-current="true">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 9v11"/></svg>
+        数据明细<span class="badge" id="badgeDetail"></span>
+      </button>
+      <button class="navitem" data-view="overview">
         <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
         经营总览<span class="badge" id="badgeAll"></span>
       </button>
@@ -299,10 +346,6 @@ dialog::backdrop{background:rgba(8,12,18,.55)}
         <svg viewBox="0 0 24 24"><path d="M12 3v6"/><rect x="8" y="9" width="8" height="5" rx="1"/><path d="M6 21v-4h12v4"/><path d="M12 14v3"/></svg>
         组织效能
       </button>
-      <button class="navitem" data-view="detail">
-        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 9v11"/></svg>
-        数据明细<span class="badge" id="badgeDetail"></span>
-      </button>
     </nav>
 
     <div class="navsec">
@@ -315,14 +358,26 @@ dialog::backdrop{background:rgba(8,12,18,.55)}
       <button class="btn" id="btnClear">清空数据</button>
     </div>
 
+    <div class="themepicker">
+      <label for="themeSelect">主题配色</label>
+      <select id="themeSelect">
+        <option value="auto">跟随系统</option>
+        <option value="light">清爽明亮</option>
+        <option value="dark">深色夜幕</option>
+        <option value="ocean">海盐蓝</option>
+        <option value="forest">松林绿</option>
+        <option value="sand">暖砂橙</option>
+      </select>
+    </div>
+
     <div class="navfoot" id="navFoot">数据来源：尚未导入<br>在 WPS 多维表格脚本编辑器运行汇总脚本，粘贴 JSON 即可。</div>
   </aside>
 
   <div class="main">
     <div class="topbar">
       <div class="topline">
-        <h1 id="viewTitle">经营总览</h1>
-        <span class="desc" id="viewDesc">热线与未购全链路核心指标</span>
+        <h1 id="viewTitle">数据明细</h1>
+        <span class="desc" id="viewDesc">源表原始记录，可排序、可导出</span>
         <div class="right">
           <button class="btn" id="btnExport">导出当前明细 CSV</button>
         </div>
@@ -1165,7 +1220,20 @@ var DASH = (function(){
   var D = DASH, $ = D.$, num = D.num, sum = D.sum, rate = D.rate, cvar = D.cvar;
   var STORE = 'wps_hotline_dash_v3';
 
-  var state = { rows:[], meta:{}, view:'overview', orgDim:'部门', detailType:'' };
+  var state = { rows:[], meta:{}, view:'detail', orgDim:'部门', detailType:'' };
+
+  var themeSelect = $('themeSelect'), theme = 'auto';
+  try{ theme = localStorage.getItem('wps_dashboard_theme') || 'auto'; }catch(e){}
+  themeSelect.value = theme;
+  if (!themeSelect.value) { theme = 'auto'; themeSelect.value = theme; }
+  if (theme === 'auto') document.documentElement.removeAttribute('data-theme');
+  else document.documentElement.setAttribute('data-theme', theme);
+  themeSelect.addEventListener('change', function(){
+    theme = themeSelect.value;
+    if (theme === 'auto') document.documentElement.removeAttribute('data-theme');
+    else document.documentElement.setAttribute('data-theme', theme);
+    try{ localStorage.setItem('wps_dashboard_theme', theme); }catch(e){}
+  });
 
   /* ============================================================
      脏数据规范化 —— WPS 真实数据里同一列会混着
